@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="YOUR.PACKAGE.NAME">
+	<uses-permission android:name="android.permission.INTERNET" />
+  	<!-- optional but highly recommended 	-->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+
+	<!-- Localytics Push messaging -->
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /> 
+
+	<permission android:name="YOUR.PACKAGE.NAME.permission.C2D_MESSAGE"
+		android:protectionLevel="signature" />
+	<uses-permission android:name="YOUR.PACKAGE.NAME.permission.C2D_MESSAGE" />
+
+	<application android:name="com.localytics.android.unity.LocalyticsApplication" android:icon="@drawable/app_icon" android:label="@string/app_name">
+		<meta-data android:name="LOCALYTICS_APP_KEY" android:value="YOUR_APP_KEY"/>
+		<meta-data android:name="LOCALYTICS_PUSH_PROJECT_ID" android:value="\ YOUR_PUSH_PROJECT_ID"/>
+		<meta-data android:name="com.google.android.gms.version" android:value="6587000" />
+		<activity android:name="com.localytics.android.unity.LocalyticsUnityPlayerActivity" android:label="@string/app_name" android:launchMode="singleTask" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			<meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+			<meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="false" />
+		</activity>
+
+		<receiver
+			android:name="com.localytics.android.PushReceiver"
+			android:permission="com.google.android.c2dm.permission.SEND" >
+		  	<intent-filter>
+		    	<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+		    	<action android:name="com.google.android.c2dm.intent.RECEIVE" />
+		    	<category android:name="YOUR.PACKAGE.NAME" />
+		  	</intent-filter>
+		</receiver>
+
+		<activity android:name="com.localytics.android.PushTrackingActivity"/>
+
+		<!-- Localytics Acquisition Tracking -->
+		<receiver android:name="com.localytics.android.ReferralReceiver" android:exported="true">
+		  	<intent-filter>
+		    	<action android:name="com.android.vending.INSTALL_REFERRER" />
+		  	</intent-filter>
+		</receiver>
+	</application>
+</manifest>
