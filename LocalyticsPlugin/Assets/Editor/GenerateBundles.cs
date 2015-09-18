@@ -34,6 +34,6 @@ public static class GenerateBundles
                           };
 
 		System.IO.Directory.CreateDirectory ("../packages");
-        AssetDatabase.ExportPackage(assets, "../packages/localytics-unity-android-3.4.0.unitypackage");
+        AssetDatabase.ExportPackage(assets, "../packages/localytics-unity-android-3.4.2.unitypackage");
     }
 }
