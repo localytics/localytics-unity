@@ -12,7 +12,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-#define LOCALYTICS_LIBRARY_VERSION      @"3.4.0"
+#define LOCALYTICS_LIBRARY_VERSION      @"3.5.0"
 
 typedef NS_ENUM(NSUInteger, LLInAppMessageDismissButtonLocation){
     LLInAppMessageDismissButtonLocationLeft,

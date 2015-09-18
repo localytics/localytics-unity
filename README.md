@@ -9,7 +9,7 @@ To use these Localytics Plugins for Unity:
 
 You will need development environment setup for Unity, Android and/or iOS. After that,
 
-1. Build the Plugins
+1. Build the Plugins (or use the generated ones from /release folder)
   
   Call `generate_packages.sh` or `generate_packages.bat` contained in the root of this repository, depending on your system (OSX or Windows). Make sure the LocalyticsPlugin project is not currently opened in Unity, or it may cause some issues. The generated packages will be in the 'packages' folder with the respective version x.x.x. (i.e. localytics-unity-android-x.x.x.unitypackage and localytics-unity-ios-x.x.x.unitypackage)
 
