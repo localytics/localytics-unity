@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using LocalyticsUnity;
 
 public class TestLocalytics : MonoBehaviour
 {
@@ -46,7 +47,6 @@ public class TestLocalytics : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
         Localytics.LoggingEnabled = true;
 
         Localytics.RegisterForAnalyticsEvents();
@@ -119,42 +119,31 @@ public class TestLocalytics : MonoBehaviour
 
 		Input.location.Start();
 		_lastStatus = Input.location.status;
-#endif
-
-
 
         UpdateLabels();
     }
 
     void UpdateLabels()
     {
-#if !UNITY_EDITOR && UNITY_IOS
-        _analyticsHost.text = "Analytics Host: " + Localytics.AnalyticsHost;
-        _appKey.text = "AppKey: " + Localytics.AppKey;
-        _installId.text = "Install Id:" + Localytics.InstallId;
-        _libraryVersion.text = "Library Version: " + Localytics.LibraryVersion;
-        _loggingEnabled.text = "Logging Enabled: " + Localytics.LoggingEnabled;
-        _messagingHost.text = "Messaging Host: " + Localytics.MessagingHost;
-		_inAppIdAdEnabled.text = "InAppAdIdParameter Enabled: " + Localytics.InAppAdIdParameterEnabled;
-        _optedOut.text = "Opted Out: " + Localytics.OptedOut;
-        _profilesHost.text = "Profiles Host: " + Localytics.ProfilesHost;
-        _pushDisabled.text = "IsCollectingAdvertisingIdentifier: " + Localytics.IsCollectingAdvertisingIdentifier;
-        _testModeEnabled.text = "Test Mode Enabled: " + Localytics.TestModeEnabled;
-        _sessionTimeoutInterval.text = "Session Timeout: " + Localytics.SessionTimeoutInterval;
-        _pushRegistrationId.text = "Push Token: " + Localytics.PushToken;
-#elif !UNITY_EDITOR && UNITY_ANDROID
-        _analyticsHost.text = "Analytics Host: " + Localytics.AnalyticsHost;
-        _appKey.text = "AppKey: " + Localytics.AppKey;
-        _installId.text = "Install Id:" + Localytics.InstallId;
-        _libraryVersion.text = "Library Version: " + Localytics.LibraryVersion;
-        _loggingEnabled.text = "Logging Enabled: " + Localytics.LoggingEnabled;
+		
+		_analyticsHost.text = "Analytics Host: " + Localytics.AnalyticsHost;
+		_appKey.text = "AppKey: " + Localytics.AppKey;
+		_installId.text = "Install Id:" + Localytics.InstallId;
+		_libraryVersion.text = "Library Version: " + Localytics.LibraryVersion;
+		_loggingEnabled.text = "Logging Enabled: " + Localytics.LoggingEnabled;
 		_messagingHost.text = "Messaging Host: " + Localytics.MessagingHost;
+		_optedOut.text = "Opted Out: " + Localytics.OptedOut;		
+		_profilesHost.text = "Profiles Host: " + Localytics.ProfilesHost;		
+		_testModeEnabled.text = "Test Mode Enabled: " + Localytics.TestModeEnabled;
+		_sessionTimeoutInterval.text = "Session Timeout: " + Localytics.SessionTimeoutInterval;
+
+#if UNITY_IOS
+		_inAppIdAdEnabled.text = "InAppAdIdParameter Enabled: " + Localytics.InAppAdIdParameterEnabled;
+		_pushDisabled.text = "IsCollectingAdvertisingIdentifier: " + Localytics.IsCollectingAdvertisingIdentifier;
+        _pushRegistrationId.text = "Push Token: " + Localytics.PushToken;
+#elif UNITY_ANDROID
 		_inAppIdAdEnabled.text = "InAppAdIdParameter Enabled: -";
-        _optedOut.text = "Opted Out: " + Localytics.OptedOut;
-        _profilesHost.text = "Profiles Host: " + Localytics.ProfilesHost;
         _pushDisabled.text = "Push Disabled: " + Localytics.PushDisabled;
-        _testModeEnabled.text = "Test Mode Enabled: " + Localytics.TestModeEnabled;
-        _sessionTimeoutInterval.text = "Session Timeout: " + Localytics.SessionTimeoutInterval;
         _pushRegistrationId.text = "Push RegId: " + Localytics.PushRegistrationId;
 #endif
     }
@@ -203,7 +192,6 @@ public class TestLocalytics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		if (Input.location.status != _lastStatus)
 		{
 			_lastStatus = Input.location.status;
@@ -213,6 +201,5 @@ public class TestLocalytics : MonoBehaviour
 				Localytics.SetLocation(Input.location.lastData);
 			}
 		}
-#endif
     }
 }

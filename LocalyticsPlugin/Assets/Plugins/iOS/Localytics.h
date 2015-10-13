@@ -12,7 +12,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-#define LOCALYTICS_LIBRARY_VERSION      @"3.5.0"
+#define LOCALYTICS_LIBRARY_VERSION      @"3.5.1"
 
 typedef NS_ENUM(NSUInteger, LLInAppMessageDismissButtonLocation){
     LLInAppMessageDismissButtonLocationLeft,
@@ -256,7 +256,7 @@ typedef NS_ENUM(NSInteger, LLProfileScope){
  @param scope The scope of the attribute governs the visability of the profile attribute (application
  only or organization wide)
  */
-+ (void)setValue:(NSObject<NSCopying> *)value forProfileAttribute:(NSString *)attribute withScope:(LLProfileScope)scope;
++ (void)setValue:(NSObject *)value forProfileAttribute:(NSString *)attribute withScope:(LLProfileScope)scope;
 
 /** Sets the value of a profile attribute (scope: Application).
  @param value The value to set the profile attribute to. value can be one of the following: NSString,
@@ -264,7 +264,7 @@ typedef NS_ENUM(NSInteger, LLProfileScope){
  nil. Passing in a 'nil' value will result in that attribute being deleted from the profile
  @param attribute The name of the profile attribute to be set
  */
-+ (void)setValue:(NSObject<NSCopying> *)value forProfileAttribute:(NSString *)attribute;
++ (void)setValue:(NSObject *)value forProfileAttribute:(NSString *)attribute;
 
 /** Adds values to a profile attribute that is a set
  @param values The value to be added to the profile attributes set

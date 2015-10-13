@@ -37,8 +37,8 @@ You will need development environment setup for Unity, Android and/or iOS. After
 3. After you generate and open the XCode project. Within XCode, add `libsqlite3.dylib` (e.g. under "General" -> "Linked Frameworks and Libraries" in the .xcodeproj settings)
 
 ### Android
-1. Inside Unity, AndroidManifest.xml is included within 'Assets/Plugins/Android'. You can also modified the file within the exported Android project, but the changes won't persist if the project is regenerated from Unity. The following changes are needed in the AndroidManifest.xml:
-  * Replace the android:value with your Localytics App Key
+1. Inside Unity, AndroidManifest.xml is included within 'Assets/Plugins/Android' as a sample; you may provide your own. You can also modified the file within the exported Android project, but the changes won't persist if the project is regenerated from Unity. The following changes are needed in the sample AndroidManifest.xml, or they need to be added to your existing AndroidManifest.xml:
+  * Replace the android:value in the sample with your Localytics App Key 
   
     ```
     <meta-data android:name="LOCALYTICS_APP_KEY" android:value="xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/>
@@ -54,7 +54,9 @@ You will need development environment setup for Unity, Android and/or iOS. After
   * (Optional) Setup Push with your Project Number (not the Project ID string).
   
     ```
-    // Important: You probably need to escape a space in front, e.g.
+    // Important: You need to escape a space in front
+    // Otherwise it will be interpreted as an int,
+    // which is not a large enough data type to hold a project ID 
     <meta-data android:name="LOCALYTICS_PUSH_PROJECT_ID" android:value="\ #################"/>
     ```
 
@@ -84,15 +86,30 @@ You will need development environment setup for Unity, Android and/or iOS. After
 
 ## Calling the SDK in C\# #
 
-After successfully setting up the SDK, the static function for the Localytics C\# class should be available within any MonoBehaviour of the project.  Localytics will automatically initiate when the application loads  (i.e. auto integrate and setup any Messaging specified in previous steps) and you can call it at any time.  Note that the scripts cannot be called from the editor, so preprocessor directives are necessary.
-
+After successfully setting up the SDK, the static function for the Localytics C\# class should be available within any MonoBehaviour of the project under the `LocalyticsUnity` namespace.
 ```
-// i.e. within a MonoBehaviour
-#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
-    Localytics.LoggingEnabled = true;
-    Localytics.SessionTimeoutInterval = 30;
+using LocalyticsUnity;
 
-    Localytics.TagEvent("xxx");
+// or
+
+namespace LocalyticsUnity {
+	...
+}
+```
+
+Localytics will automatically initiate when the application loads  (i.e. auto integrate and setup any Messaging specified in previous steps) and you can call it at any time.  Note that the scripts should not be called from the editor, so preprocessor directives may be necessary.
+
+When targeting iOS or Android only, most methods can be called without preprocessor directives:
+```
+// within a MonoBehaviour
+Localytics.LoggingEnabled = true;
+Localytics.RegisterForAnalyticsEvents();
+Localytics.RegisterForMessagingEvents();
+
+Localytics.TagEvent("click");
+
+// e.g. with preprocessor directives
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
     Localytics.TagScreen("xxx");
     Localytics.Upload();
 #endif
@@ -102,6 +119,25 @@ After successfully setting up the SDK, the static function for the Localytics C\
     ...
 #elif !UNITY_EDITOR && UNITY_ANDROID
     ...
+#endif
+```
+When targeting platforms other than iOS or Android, a `NotImplementedException` will be thrown if these SDK method are called. Therefore you should considering using preprocessor directives regardless if you support other platforms.
+
+A small subset of the API requires preprocessor directives:
+```
+// within a MonoBehaviour
+#if UNITY_IOS
+
+Localytics.InAppAdIdParameterEnabled;
+Localytics.IsCollectingAdvertisingIdentifier;
+Localytics.PushToken;
+	
+#elif UNITY_ANDROID
+
+Localytics.PushDisabled;
+Localytics.PushRegistrationId;
+Localytics.ClearInAppMessageDisplayActivity();
+
 #endif
 ```
 
@@ -114,7 +150,7 @@ To run the project, you need to follow the steps above (Build/Import .unitypacka
 
 ### Available API
 
-Refer to the iOS and Android Documentation for details of each call. The available API contains almost all of the native API of the same version. Generally, the Pascal Case function name is C\# correspond to the native function with the Camel Case name (i.e. `Localytics.TagEvent(...)` calls `tagEvent(...)` in the iOS and Android library). The implementation is in Localytics.cs, within the LocalyticsPlugin/Assets/Localytics folderor when you imported the .unitypackage.
+Refer to the iOS and Android Documentation for details of each call. The available API contains almost all of the native API of the same version. Generally, the Pascal Case function name is C\# correspond to the native function with the Camel Case name (e.g. `Localytics.TagEvent(...)` calls `tagEvent(...)` in the iOS and Android library). The implementation is in Localytics.cs, within the LocalyticsPlugin/Assets/Localytics folderor when you imported the .unitypackage.
 
 #### C\# Listeners
 
@@ -225,7 +261,6 @@ public static bool LoggingEnabled
 public static string MessagingHost
 public static bool OptedOut
 public static string ProfilesHost
-public static bool InAppAdIdParameterEnabled
 public static bool TestModeEnabled
 public static long SessionTimeoutInterval
 
@@ -237,6 +272,7 @@ public static void ClearInAppMessageDisplayActivity()
 #elif UNITY_IOS /// iOS Only
 public static string PushToken
 public static bool IsCollectingAdvertisingIdentifier
+public static bool InAppAdIdParameterEnabled
 #endif
 
 

@@ -18,7 +18,7 @@ public static class GenerateBundles
                           };
 
 		System.IO.Directory.CreateDirectory ("../packages");
-        AssetDatabase.ExportPackage(assets, "../packages/localytics-unity-ios-3.5.0.unitypackage");
+        AssetDatabase.ExportPackage(assets, "../packages/localytics-unity-ios-3.5.1.unitypackage");
     }
 
     [MenuItem("Localytics/Build Android")]

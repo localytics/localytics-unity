@@ -42,7 +42,7 @@ using System.Collections.Generic;
 /// All numbers are parsed to doubles.
 /// </summary>
 
-
+namespace LocalyticsUnity {
 public class MiniJSON
 {
 	private const int TOKEN_NONE = 0;
@@ -852,3 +852,4 @@ public static class MiniJsonExtensions
 }
 
 #endregion
+}
