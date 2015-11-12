@@ -645,7 +645,21 @@ namespace LocalyticsUnity {
 			#endif
 		}
 		
-		public static void TagEvent(string eventName, Dictionary<string, string> attributes = null, long customerValueIncrease = 0)
+		public static void TagEvent(string eventName, Dictionary<string, string> attributes = null)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagEvent", eventName, DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+				values = MiniJSON.jsonEncode (attributes);
+			_tagEvent(eventName, values);
+			#else
+			throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+		
+		public static void TagEventWithCustomerValueIncrease(string eventName, Dictionary<string, string> attributes = null, long customerValueIncrease = 0)
 		{
 			#if UNITY_ANDROID
 			LocalyticsClass.CallStatic("tagEvent", eventName, DictionaryToMap(attributes), customerValueIncrease);
@@ -653,7 +667,7 @@ namespace LocalyticsUnity {
 			string values = "";
 			if (attributes != null)
 				values = MiniJSON.jsonEncode (attributes);
-			_tagEvent(eventName, values, customerValueIncrease);
+			_tagEventWithCustomerValueIncrease(eventName, values, customerValueIncrease);
 			#else
 			throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 			#endif
@@ -1062,7 +1076,8 @@ namespace LocalyticsUnity {
 		[DllImport("__Internal")] private static extern void _setIdentifier(string key, string value);
 		[DllImport("__Internal")] private static extern void _setLocation(double latitude, double longitude);
 		[DllImport("__Internal")] private static extern void _setProfileAttribute (string attributeName, string values, int scope);
-		[DllImport("__Internal")] private static extern void _tagEvent(string eventName, string attributes, long customerValueIncrease);
+		[DllImport("__Internal")] private static extern void _tagEvent(string eventName, string attributes);
+		[DllImport("__Internal")] private static extern void _tagEventWithCustomerValueIncrease(string eventName, string attributes, long customerValueIncrease);
 		[DllImport("__Internal")] private static extern void _tagScreen(string screen);
 		[DllImport("__Internal")] private static extern void _triggerInAppMessage(string triggerName, string attributes);
 		[DllImport("__Internal")] private static extern void _upload();

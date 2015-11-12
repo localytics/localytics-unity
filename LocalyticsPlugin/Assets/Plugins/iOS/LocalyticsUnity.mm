@@ -460,7 +460,12 @@ extern "C"
         [Localytics setValue:MakeNSArray(values) forProfileAttribute:CreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
     
-    void _tagEvent(const char* eventName, const char* attributes, long customerValueIncrease)
+    void _tagEvent(const char* eventName, const char* attributes)
+    {
+        [Localytics tagEvent:CreateNSString(eventName) attributes:MakeNSDictionary(attributes)];
+    }
+	
+	void _tagEventWithCustomerValueIncrease(const char* eventName, const char* attributes, long customerValueIncrease)
     {
         [Localytics tagEvent:CreateNSString(eventName) attributes:MakeNSDictionary(attributes) customerValueIncrease:[NSNumber numberWithLong:customerValueIncrease]];
     }
