@@ -225,7 +225,7 @@ NSString* CreateNSString (const char* string)
 }
 
 // Helper method to create C string copy
-char* MakeStringCopy (const char* string)
+char* MakeStringCopyLocalytics (const char* string)
 {
     if (string == NULL)
         return NULL;
@@ -257,7 +257,7 @@ extern "C"
 {
     const char* _analyticsHost()
     {
-        return MakeStringCopy([[Localytics analyticsHost] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics analyticsHost] UTF8String]);
     }
     
     void _setAnalyticsHost(const char* analyticsHost)
@@ -267,12 +267,12 @@ extern "C"
     
     const char* _appKey()
     {
-        return MakeStringCopy([[Localytics appKey] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics appKey] UTF8String]);
     }
     
     const char* _customerId()
     {
-        return MakeStringCopy([[Localytics customerId] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics customerId] UTF8String]);
     }
     
     void _setInAppMessageDismissButtonLocation(uint location)
@@ -292,7 +292,7 @@ extern "C"
     
     const char* _installId()
     {
-        return MakeStringCopy([[Localytics installId] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics installId] UTF8String]);
     }
     
     bool _isCollectingAdvertisingIdentifier()
@@ -307,7 +307,7 @@ extern "C"
     
     const char* _libraryVersion()
     {
-        return MakeStringCopy([[Localytics libraryVersion] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics libraryVersion] UTF8String]);
     }
     
     bool _isLoggingEnabled()
@@ -322,7 +322,7 @@ extern "C"
     
     const char* _messagingHost()
     {
-        return MakeStringCopy([[Localytics messagingHost] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics messagingHost] UTF8String]);
     }
     
     void _setMessagingHost(const char* messagingHost)
@@ -342,7 +342,7 @@ extern "C"
     
     const char* _profilesHost()
     {
-        return MakeStringCopy([[Localytics profilesHost] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics profilesHost] UTF8String]);
     }
     
     void _setProfilesHost(const char* profilesHost)
@@ -352,7 +352,7 @@ extern "C"
     
     const char* _pushToken()
     {
-        return MakeStringCopy([[Localytics pushToken] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics pushToken] UTF8String]);
     }
     
     bool _testModeEnabled()
@@ -422,12 +422,12 @@ extern "C"
     
     const char* _getCustomDimension(int dimension)
     {
-        return MakeStringCopy([[Localytics valueForCustomDimension:dimension] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics valueForCustomDimension:dimension] UTF8String]);
     }
     
     const char* _getIdentifier(const char* identifier)
     {
-        return MakeStringCopy([[Localytics valueForIdentifier:CreateNSString(identifier)] UTF8String]);
+        return MakeStringCopyLocalytics([[Localytics valueForIdentifier:CreateNSString(identifier)] UTF8String]);
     }
     
     void _incrementProfileAttribute(const char* attributeName, long attributeValue, int scope)
