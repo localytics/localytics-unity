@@ -216,7 +216,7 @@ static MessagingDelegate *_messagingInstance;
 
 
 // Converts C style string to NSString
-NSString* CreateNSString (const char* string)
+NSString* LLCreateNSString (const char* string)
 {
     if (string)
         return [NSString stringWithUTF8String: string];
@@ -225,7 +225,7 @@ NSString* CreateNSString (const char* string)
 }
 
 // Helper method to create C string copy
-char* MakeStringCopy (const char* string)
+char* LLMakeStringCopy (const char* string)
 {
     if (string == NULL)
         return NULL;
@@ -236,18 +236,18 @@ char* MakeStringCopy (const char* string)
 }
 
 // Converts JSON array into NSArray
-NSArray* MakeNSArray(const char* string)
+NSArray* LLMakeNSArray(const char* string)
 {
-    NSData *data = [CreateNSString(string) dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [LLCreateNSString(string) dataUsingEncoding:NSUTF8StringEncoding];
     NSError *e;
     NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&e];
     return array;
 }
 
 // Converts JSON dictionary into NSDictionary
-NSDictionary* MakeNSDictionary(const char* string)
+NSDictionary* LLMakeNSDictionary(const char* string)
 {
-    NSData *data = [CreateNSString(string) dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [LLCreateNSString(string) dataUsingEncoding:NSUTF8StringEncoding];
     NSError *e;
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&e];
     return dictionary;
@@ -257,22 +257,22 @@ extern "C"
 {
     const char* _analyticsHost()
     {
-        return MakeStringCopy([[Localytics analyticsHost] UTF8String]);
+        return LLMakeStringCopy([[Localytics analyticsHost] UTF8String]);
     }
     
     void _setAnalyticsHost(const char* analyticsHost)
     {
-        [Localytics setAnalyticsHost:CreateNSString(analyticsHost)];
+        [Localytics setAnalyticsHost:LLCreateNSString(analyticsHost)];
     }
     
     const char* _appKey()
     {
-        return MakeStringCopy([[Localytics appKey] UTF8String]);
+        return LLMakeStringCopy([[Localytics appKey] UTF8String]);
     }
     
     const char* _customerId()
     {
-        return MakeStringCopy([[Localytics customerId] UTF8String]);
+        return LLMakeStringCopy([[Localytics customerId] UTF8String]);
     }
     
     void _setInAppMessageDismissButtonLocation(uint location)
@@ -287,12 +287,12 @@ extern "C"
     
     void _setCustomerId(const char* customerId)
     {
-        [Localytics setCustomerId:CreateNSString(customerId)];
+        [Localytics setCustomerId:LLCreateNSString(customerId)];
     }
     
     const char* _installId()
     {
-        return MakeStringCopy([[Localytics installId] UTF8String]);
+        return LLMakeStringCopy([[Localytics installId] UTF8String]);
     }
     
     bool _isCollectingAdvertisingIdentifier()
@@ -307,7 +307,7 @@ extern "C"
     
     const char* _libraryVersion()
     {
-        return MakeStringCopy([[Localytics libraryVersion] UTF8String]);
+        return LLMakeStringCopy([[Localytics libraryVersion] UTF8String]);
     }
     
     bool _isLoggingEnabled()
@@ -322,12 +322,12 @@ extern "C"
     
     const char* _messagingHost()
     {
-        return MakeStringCopy([[Localytics messagingHost] UTF8String]);
+        return LLMakeStringCopy([[Localytics messagingHost] UTF8String]);
     }
     
     void _setMessagingHost(const char* messagingHost)
     {
-        [Localytics setMessagingHost:CreateNSString(messagingHost)];
+        [Localytics setMessagingHost:LLCreateNSString(messagingHost)];
     }
     
     bool _isOptedOut()
@@ -342,17 +342,17 @@ extern "C"
     
     const char* _profilesHost()
     {
-        return MakeStringCopy([[Localytics profilesHost] UTF8String]);
+        return LLMakeStringCopy([[Localytics profilesHost] UTF8String]);
     }
     
     void _setProfilesHost(const char* profilesHost)
     {
-        [Localytics setProfilesHost:CreateNSString(profilesHost)];
+        [Localytics setProfilesHost:LLCreateNSString(profilesHost)];
     }
     
     const char* _pushToken()
     {
-        return MakeStringCopy([[Localytics pushToken] UTF8String]);
+        return LLMakeStringCopy([[Localytics pushToken] UTF8String]);
     }
     
     bool _testModeEnabled()
@@ -377,7 +377,7 @@ extern "C"
     
     void _addProfileAttributesToSet(const char* attribute, const char* values, int scope)
     {
-        [Localytics addValues:MakeNSArray(values) toSetForProfileAttribute:CreateNSString(attribute) withScope:(LLProfileScope)scope];
+        [Localytics addValues:LLLLMakeNSArray(values) toSetForProfileAttribute:LLCreateNSString(attribute) withScope:(LLProfileScope)scope];
     }
     
     void _closeSession()
@@ -387,32 +387,32 @@ extern "C"
     
     void _decrementProfileAttribute(const char* attribute, long value, int scope)
     {
-        [Localytics decrementValueBy:value forProfileAttribute:CreateNSString(attribute) withScope:(LLProfileScope)scope];
+        [Localytics decrementValueBy:value forProfileAttribute:LLCreateNSString(attribute) withScope:(LLProfileScope)scope];
     }
     
     void _deleteProfileAttribute(const char* attribute, int scope)
     {
-        [Localytics deleteProfileAttribute:CreateNSString(attribute) withScope:(LLProfileScope)scope];
+        [Localytics deleteProfileAttribute:LLCreateNSString(attribute) withScope:(LLProfileScope)scope];
     }
     
     void _setCustomerEmail(const char* email)
     {
-        [Localytics setCustomerEmail:CreateNSString(email)];
+        [Localytics setCustomerEmail:LLCreateNSString(email)];
     }
     
     void _setCustomerFirstName(const char* firstName)
     {
-        [Localytics setCustomerFirstName:CreateNSString(firstName)];
+        [Localytics setCustomerFirstName:LLCreateNSString(firstName)];
     }
     
     void _setCustomerLastName(const char* lastName)
     {
-        [Localytics setCustomerLastName:CreateNSString(lastName)];
+        [Localytics setCustomerLastName:LLCreateNSString(lastName)];
     }
     
     void _setCustomerFullName(const char* fullName)
     {
-        [Localytics setCustomerFullName:CreateNSString(fullName)];
+        [Localytics setCustomerFullName:LLCreateNSString(fullName)];
     }
     
     void _dismissCurrentInAppMessage()
@@ -422,32 +422,32 @@ extern "C"
     
     const char* _getCustomDimension(int dimension)
     {
-        return MakeStringCopy([[Localytics valueForCustomDimension:dimension] UTF8String]);
+        return LLMakeStringCopy([[Localytics valueForCustomDimension:dimension] UTF8String]);
     }
     
     const char* _getIdentifier(const char* identifier)
     {
-        return MakeStringCopy([[Localytics valueForIdentifier:CreateNSString(identifier)] UTF8String]);
+        return LLMakeStringCopy([[Localytics valueForIdentifier:LLCreateNSString(identifier)] UTF8String]);
     }
     
     void _incrementProfileAttribute(const char* attributeName, long attributeValue, int scope)
     {
-        [Localytics incrementValueBy:attributeValue forProfileAttribute:CreateNSString(attributeName) withScope:(LLProfileScope)scope];
+        [Localytics incrementValueBy:attributeValue forProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
     
     void _removeProfileAttributesFromSet(const char* attributeName, const char* values, int scope)
     {
-        [Localytics removeValues:MakeNSArray(values) fromSetForProfileAttribute:CreateNSString(attributeName) withScope:(LLProfileScope)scope];
+        [Localytics removeValues:LLMakeNSArray(values) fromSetForProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
     
     void _setCustomDimension(int dimension, const char* value)
     {
-        [Localytics setValue:CreateNSString(value) forCustomDimension:dimension];
+        [Localytics setValue:LLCreateNSString(value) forCustomDimension:dimension];
     }
     
     void _setIdentifier(const char* key, const char* value)
     {
-        [Localytics setValue:CreateNSString(key) forIdentifier:CreateNSString(value)];
+        [Localytics setValue:LLCreateNSString(key) forIdentifier:LLCreateNSString(value)];
     }
     
     void _setLocation(double latitude, double longitude)
@@ -457,22 +457,22 @@ extern "C"
     
     void _setProfileAttribute(const char* attributeName, const char* values, int scope)
     {
-        [Localytics setValue:MakeNSArray(values) forProfileAttribute:CreateNSString(attributeName) withScope:(LLProfileScope)scope];
+        [Localytics setValue:LLMakeNSArray(values) forProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
     
     void _tagEvent(const char* eventName, const char* attributes, long customerValueIncrease)
     {
-        [Localytics tagEvent:CreateNSString(eventName) attributes:MakeNSDictionary(attributes) customerValueIncrease:[NSNumber numberWithLong:customerValueIncrease]];
+        [Localytics tagEvent:LLCreateNSString(eventName) attributes:LLMakeNSDictionary(attributes) customerValueIncrease:[NSNumber numberWithLong:customerValueIncrease]];
     }
     
     void _tagScreen(const char* screenName)
     {
-        [Localytics tagScreen:CreateNSString(screenName)];
+        [Localytics tagScreen:LLCreateNSString(screenName)];
     }
     
     void _triggerInAppMessage(const char* triggerName, const char* attributes)
     {
-        [Localytics triggerInAppMessage:CreateNSString(triggerName) withAttributes:MakeNSDictionary(attributes)];
+        [Localytics triggerInAppMessage:LLCreateNSString(triggerName) withAttributes:LLMakeNSDictionary(attributes)];
     }
     
     void _upload()
