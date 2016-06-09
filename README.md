@@ -35,9 +35,9 @@ You will need development environment setup for Unity, Android and/or iOS. After
   * (Optional) Other Delegate Methods (see LocalyticsAppController.mm `application:handleWatchKitExtensionRequest:reply:`)
 
 3. After you generate and open the XCode project. Within XCode:
-  * Add `libsqlite3.dylib` and `libz.tbd` (e.g. under "General" -> "Linked Frameworks and Libraries" in the .xcodeproj settings)
-  * If your info.plist does not already contain the key "UIBackgroundModes", add it as an array.  Add remote-notification as one of the array values
-  * Enable Push Notifications under capabilities.
+  * Add `libsqlite3.dylib` and `libz.tbd` (e.g. under "General" -> "Linked Frameworks and Libraries" in the .xcodeproj settings).
+  * If your info.plist does not already contain the key "UIBackgroundModes", add it as an array.  Add remote-notification as one of the array values.
+  * Enable Push Notifications under Project Navigator -> Build Target -> Capabilities.
 
 ### Android
 1. Inside Unity, AndroidManifest.xml is included within 'Assets/Plugins/Android' as a sample; you may provide your own. You can also modified the file within the exported Android project, but the changes won't persist if the project is regenerated from Unity. The following changes are needed in the sample AndroidManifest.xml, or they need to be added to your existing AndroidManifest.xml:
