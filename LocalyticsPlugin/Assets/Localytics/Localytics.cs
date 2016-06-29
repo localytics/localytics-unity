@@ -648,7 +648,10 @@ namespace LocalyticsUnity {
 		public static void TagEvent(string eventName, Dictionary<string, string> attributes = null, long customerValueIncrease = 0)
 		{
 			#if UNITY_ANDROID
-			LocalyticsClass.CallStatic("tagEvent", eventName, DictionaryToMap(attributes), customerValueIncrease);
+			if (customerValueIncrease == 0)
+				LocalyticsClass.CallStatic("tagEvent", eventName, DictionaryToMap(attributes));
+			else
+				LocalyticsClass.CallStatic("tagEvent", eventName, DictionaryToMap(attributes), customerValueIncrease);
 			#elif UNITY_IOS
 			string values = "";
 			if (attributes != null)
