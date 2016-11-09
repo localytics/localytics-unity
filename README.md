@@ -62,7 +62,7 @@ You will need development environment setup for Unity, Android and/or iOS. After
 
 2. Modifying Application launcher
   
-  If the existing Unity Android Project already has a main Application/Acitivty defined, you will need to merge this with our class.  For references on what is needed refer the application and activity class inside localytics-android/src within this repository; you can also inspect the class inside Android Studio). Basically the following is needed.
+  If the existing Unity Android Project already has a main Application/Activity defined, you will need to merge this with our class.  For references on what is needed refer the application and activity class inside localytics-android/src within this repository; you can also inspect the class inside Android Studio). Basically the following is needed.
   * Inside `onCreate()` of com.localytics.android.unity.LocalyticsApplication.java or your main application, call this
     
     ```
