@@ -462,7 +462,10 @@ extern "C"
     
     void _tagEvent(const char* eventName, const char* attributes, long customerValueIncrease)
     {
-        [Localytics tagEvent:LLCreateNSString(eventName) attributes:LLMakeNSDictionary(attributes) customerValueIncrease:[NSNumber numberWithLong:customerValueIncrease]];
+        if (customerValueIncrease == 0)
+            [Localytics tagEvent:LLCreateNSString(eventName) attributes:LLMakeNSDictionary(attributes)];
+        else
+            [Localytics tagEvent:LLCreateNSString(eventName) attributes:LLMakeNSDictionary(attributes) customerValueIncrease:[NSNumber numberWithLong:customerValueIncrease]];
     }
     
     void _tagScreen(const char* screenName)
