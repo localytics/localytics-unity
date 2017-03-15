@@ -51,31 +51,62 @@ public class TestLocalytics : MonoBehaviour
 
         Localytics.RegisterForAnalyticsEvents();
 		Localytics.RegisterForMessagingEvents();
+		Localytics.RegisterForLocationEvents();
 
 		// This is just for testing purpose
 		Localytics.UnregisterForAnalyticsEvents();
 		Localytics.UnregisterForMessagingEvents();
+		Localytics.UnregisterForLocationEvents();
 
 		Localytics.RegisterForAnalyticsEvents();
 		Localytics.RegisterForMessagingEvents();
+		Localytics.RegisterForLocationEvents();
 
-		//Localytics.TestModeEnabled = true;
+		// Analytics events
         Localytics.OnLocalyticsDidTagEvent += Localytics_OnLocalyticsDidTagEvent;
         Localytics.OnLocalyticsSessionWillOpen += Localytics_OnLocalyticsSessionWillOpen;
         Localytics.OnLocalyticsSessionDidOpen += Localytics_OnLocalyticsSessionDidOpen;
         Localytics.OnLocalyticsSessionWillClose += Localytics_OnLocalyticsSessionWillClose;
 
+		// Messaging events
 		Localytics.OnLocalyticsDidDismissInAppMessage += Localytics_OnLocalyticsDidDismissInAppMessage;
 		Localytics.OnLocalyticsDidDisplayInAppMessage += Localytics_OnLocalyticsDidDisplayInAppMessage;
 		Localytics.OnLocalyticsWillDismissInAppMessage += Localytics_OnLocalyticsWillDismissInAppMessage;
 		Localytics.OnLocalyticsWillDisplayInAppMessage += Localytics_OnLocalyticsWillDisplayInAppMessage;
-		Localytics.SessionTimeoutInterval = 15;
+		Localytics.OnLocalyticsShouldShowPushNotification += Localytics_OnLocalyticsShouldShowPushNotification;
+		Localytics.OnLocalyticsShouldShowPlacesPushNotification += Localytics_OnLocalyticsShouldShowPlacesPushNotification;
+		Localytics.OnLocalyticsWillShowPushNotification += Localytics_OnLocalyticsWillShowPushNotification;
+		Localytics.OnLocalyticsWillShowPlacesPushNotification += Localytics_OnLocalyticsWillShowPlacesPushNotification;
 
-        _openSession.onClick.AddListener(() => { Localytics.OpenSession(); Localytics.Upload(); });
-        _closeSession.onClick.AddListener(() => { Localytics.CloseSession(); Localytics.Upload(); });
-        _tagEventClick.onClick.AddListener(() => { Localytics.TagEvent("click"); Localytics.Upload(); });
-        _tagScreen1.onClick.AddListener(() => { Localytics.TagScreen("screen1"); Localytics.Upload(); });
-        _tagScreen2.onClick.AddListener(() => { Localytics.TagScreen("screen2"); Localytics.Upload(); });
+		// Location events
+		Localytics.OnLocalyticsDidUpdateLocation += Localytics_OnLocalyticsDidUpdateLocation;
+		Localytics.OnLocalyticsDidTriggerRegions += Localytics_OnLocalyticsDidTriggerRegions;
+		Localytics.OnLocalyticsDidUpdateMonitoredGeofences += Localytics_OnLocalyticsDidUpdateMonitoredGeofences;
+
+        _openSession.onClick.AddListener(() => {
+			Localytics.OpenSession();
+			Localytics.Upload();
+		});
+        _closeSession.onClick.AddListener(() => {
+			Localytics.CloseSession();
+			Localytics.Upload();
+		});
+        _tagEventClick.onClick.AddListener(() => {
+			Dictionary<string, string> attributes = new Dictionary<string, string>();
+			attributes.Add("attr", "value");
+			Localytics.TagEvent("test", attributes);
+			Localytics.Upload();
+
+		});
+        _tagScreen1.onClick.AddListener(() => {
+			Localytics.TagScreen("screen1");
+			Localytics.Upload();
+		});
+
+        _tagScreen2.onClick.AddListener(() => {
+			Localytics.TagScreen("screen2");
+			Localytics.Upload();
+		});
 
         Localytics.CustomerId = "user1";
 
@@ -125,17 +156,12 @@ public class TestLocalytics : MonoBehaviour
 
     void UpdateLabels()
     {
-		
-		_analyticsHost.text = "Analytics Host: " + Localytics.AnalyticsHost;
 		_appKey.text = "AppKey: " + Localytics.AppKey;
 		_installId.text = "Install Id:" + Localytics.InstallId;
 		_libraryVersion.text = "Library Version: " + Localytics.LibraryVersion;
 		_loggingEnabled.text = "Logging Enabled: " + Localytics.LoggingEnabled;
-		_messagingHost.text = "Messaging Host: " + Localytics.MessagingHost;
 		_optedOut.text = "Opted Out: " + Localytics.OptedOut;		
-		_profilesHost.text = "Profiles Host: " + Localytics.ProfilesHost;		
 		_testModeEnabled.text = "Test Mode Enabled: " + Localytics.TestModeEnabled;
-		_sessionTimeoutInterval.text = "Session Timeout: " + Localytics.SessionTimeoutInterval;
 
 #if UNITY_IOS
 		_inAppIdAdEnabled.text = "InAppAdIdParameter Enabled: " + Localytics.InAppAdIdParameterEnabled;
@@ -143,7 +169,7 @@ public class TestLocalytics : MonoBehaviour
         _pushRegistrationId.text = "Push Token: " + Localytics.PushToken;
 #elif UNITY_ANDROID
 		_inAppIdAdEnabled.text = "InAppAdIdParameter Enabled: -";
-        _pushDisabled.text = "Push Disabled: " + Localytics.PushDisabled;
+		_pushDisabled.text = "Push Disabled: " + Localytics.NotificationsDisabled;
         _pushRegistrationId.text = "Push RegId: " + Localytics.PushRegistrationId;
 #endif
     }
@@ -186,6 +212,127 @@ public class TestLocalytics : MonoBehaviour
 	void Localytics_OnLocalyticsWillDisplayInAppMessage()
 	{
 		Debug.Log ("WillDisplayInAppMessage");
+	}
+
+	bool Localytics_OnLocalyticsShouldShowPushNotification(PushCampaignInfo campaign)
+	{
+		Debug.Log ("ShouldShowPushNotification");
+		printPushCampaign (campaign);
+		return true;
+	}
+
+	bool Localytics_OnLocalyticsShouldShowPlacesPushNotification(PlacesCampaignInfo campaign)
+	{
+		Debug.Log ("ShouldShowPlacesPushNotification");
+		printPlacesCampaign (campaign);
+		return true;
+	}
+
+	AndroidJavaObject Localytics_OnLocalyticsWillShowPushNotification(AndroidJavaObject notificationBuilder, PushCampaignInfo campaign)
+	{
+		Debug.Log ("WillShowPushNotification");
+		printPushCampaign (campaign);
+		//notificationBuilder.Call<AndroidJavaObject> ("setContentTitle", "New Title");
+		return notificationBuilder;
+	}
+
+	AndroidJavaObject Localytics_OnLocalyticsWillShowPlacesPushNotification(AndroidJavaObject notificationBuilder, PlacesCampaignInfo campaign)
+	{
+		Debug.Log ("WillShowPlacesPushNotification");
+		printPlacesCampaign (campaign);
+		//notificationBuilder.Call<AndroidJavaObject> ("setContentTitle", "New Title");
+		return notificationBuilder;
+	}
+
+#if UNITY_ANDROID
+	void Localytics_OnLocalyticsDidUpdateLocation(AndroidJavaObject location)
+	{
+		Debug.Log ("DidUpdateLocation");
+		double latitude = location.Call<double> ("getLatitude");
+		double longitude = location.Call<double> ("getLongitude");
+		Debug.Log ("lat=" + latitude + " lng=" + longitude);
+	}
+#else
+	void Localytics_OnLocalyticsDidUpdateLocation(LocationInfo location)
+	{
+	}
+#endif
+
+	void Localytics_OnLocalyticsDidTriggerRegions(List<CircularRegionInfo> regions, Localytics.RegionEvent regionEvent)
+	{
+		Debug.Log ("DidTriggerRegions for event: " + regionEvent);
+		foreach (CircularRegionInfo info in regions)
+		{
+			printCircularRegion(info);
+		}
+	}
+
+	void Localytics_OnLocalyticsDidUpdateMonitoredGeofences(List<CircularRegionInfo> added, List<CircularRegionInfo> removed)
+	{
+		Debug.Log ("DidUpdateMonitoredGeofences");
+		Debug.Log ("--- added ---");
+		foreach (CircularRegionInfo info in added)
+		{
+			printCircularRegion(info);
+		}
+		Debug.Log ("--- removed ---");
+		foreach (CircularRegionInfo info in removed)
+		{
+			printCircularRegion(info);
+		}
+	}
+
+	private void printPushCampaign(PushCampaignInfo info)
+	{
+		Debug.Log("-------");
+		Debug.Log("PushCampaignInfo");
+		Debug.Log("campaignId: " + info.CampaignId);
+		Debug.Log("name: " + info.Name);
+		Debug.Log("creativeId: " + info.CreativeId);
+		Debug.Log("creativeType: " + info.CreativeType);
+		Debug.Log("message: " + info.Message);
+		Debug.Log("soundFilename: " + info.SoundFilename);
+		Debug.Log("attributes:");
+		foreach (KeyValuePair<string, string> kvp in info.Attributes)
+		{
+			Debug.Log(kvp.Key + "=" + kvp.Value);
+		}
+	}
+
+	private void printPlacesCampaign(PlacesCampaignInfo info)
+	{
+		Debug.Log("-------");
+		Debug.Log("PlacesCampaignInfo");
+		Debug.Log("campaignId: " + info.CampaignId);
+		Debug.Log("name: " + info.Name);
+		Debug.Log("creativeId: " + info.CreativeId);
+		Debug.Log("creativeType: " + info.CreativeType);
+		Debug.Log("message: " + info.Message);
+		Debug.Log("soundFilename: " + info.SoundFilename);
+		Debug.Log("triggerEvent: " + info.TriggerEvent);
+		Debug.Log("attributes:");
+		foreach (KeyValuePair<string, string> kvp in info.Attributes)
+		{
+			Debug.Log(kvp.Key + "=" + kvp.Value);
+		}
+		printCircularRegion(info.Region);
+	}
+
+	private void printCircularRegion(CircularRegionInfo info)
+	{
+		Debug.Log("-------");
+		Debug.Log("CircularRegionInfo");
+		Debug.Log("uniqueId: " + info.UniqueId);
+		Debug.Log("latitude: " + info.Latitude);
+		Debug.Log("longitude: " + info.Longitude);
+		Debug.Log("radius: " + info.Radius);
+		Debug.Log("name: " + info.Name);
+		Debug.Log("type: " + info.Type);
+		Debug.Log("attributes:");
+		foreach (KeyValuePair<string, string> kvp in info.Attributes)
+		{
+			Debug.Log(kvp.Key + "=" + kvp.Value);
+		}
 	}
 	
 	private LocationServiceStatus _lastStatus;
