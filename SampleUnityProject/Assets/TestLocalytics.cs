@@ -73,10 +73,12 @@ public class TestLocalytics : MonoBehaviour
 		Localytics.OnLocalyticsDidDisplayInAppMessage += Localytics_OnLocalyticsDidDisplayInAppMessage;
 		Localytics.OnLocalyticsWillDismissInAppMessage += Localytics_OnLocalyticsWillDismissInAppMessage;
 		Localytics.OnLocalyticsWillDisplayInAppMessage += Localytics_OnLocalyticsWillDisplayInAppMessage;
+#if UNITY_ANDROID
 		Localytics.OnLocalyticsShouldShowPushNotification += Localytics_OnLocalyticsShouldShowPushNotification;
 		Localytics.OnLocalyticsShouldShowPlacesPushNotification += Localytics_OnLocalyticsShouldShowPlacesPushNotification;
 		Localytics.OnLocalyticsWillShowPushNotification += Localytics_OnLocalyticsWillShowPushNotification;
 		Localytics.OnLocalyticsWillShowPlacesPushNotification += Localytics_OnLocalyticsWillShowPlacesPushNotification;
+#endif
 
 		// Location events
 		Localytics.OnLocalyticsDidUpdateLocation += Localytics_OnLocalyticsDidUpdateLocation;
@@ -164,11 +166,8 @@ public class TestLocalytics : MonoBehaviour
 		_testModeEnabled.text = "Test Mode Enabled: " + Localytics.TestModeEnabled;
 
 #if UNITY_IOS
-		_inAppIdAdEnabled.text = "InAppAdIdParameter Enabled: " + Localytics.InAppAdIdParameterEnabled;
-		_pushDisabled.text = "IsCollectingAdvertisingIdentifier: " + Localytics.IsCollectingAdvertisingIdentifier;
         _pushRegistrationId.text = "Push Token: " + Localytics.PushToken;
 #elif UNITY_ANDROID
-		_inAppIdAdEnabled.text = "InAppAdIdParameter Enabled: -";
 		_pushDisabled.text = "Push Disabled: " + Localytics.NotificationsDisabled;
         _pushRegistrationId.text = "Push RegId: " + Localytics.PushRegistrationId;
 #endif
@@ -253,8 +252,10 @@ public class TestLocalytics : MonoBehaviour
 		Debug.Log ("lat=" + latitude + " lng=" + longitude);
 	}
 #else
-	void Localytics_OnLocalyticsDidUpdateLocation(LocationInfo location)
+	void Localytics_OnLocalyticsDidUpdateLocation(Dictionary<string, object> locationDict)
 	{
+		Debug.Log ("DidUpdateLocation");
+		Debug.Log ("lat=" + locationDict["latitude"] + " lng=" + locationDict["longitude"]);
 	}
 #endif
 

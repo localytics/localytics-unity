@@ -3,8 +3,8 @@
 extern "C" {
     typedef void (*LocalyticsAnalyticsCallback)(const char*);
     typedef void (*LocalyticsMessagingCallback)(const char*);
+    typedef void (*LocalyticsLocationCallback)(const char*);
 }
-
 
 @interface AnalyticsDelegate : NSObject <LLAnalyticsDelegate>
 
@@ -18,5 +18,12 @@ extern "C" {
 
 + (MessagingDelegate *)instance;
 + (LocalyticsMessagingCallback) callback;
+
+@end
+
+@interface LocationDelegate : NSObject <LLLocationDelegate>
+
++ (LocationDelegate *)instance;
++ (LocalyticsLocationCallback) callback;
 
 @end

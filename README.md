@@ -10,11 +10,11 @@ To use these Localytics Plugins for Unity:
 You will need development environment setup for Unity, Android and/or iOS. After that,
 
 1. Build the Plugins (or use the generated ones from /release folder)
-  
+
   Call `generate_packages.sh` or `generate_packages.bat` contained in the root of this repository, depending on your system (OSX or Windows). Make sure the LocalyticsPlugin project is not currently opened in Unity, or it may cause some issues. The generated packages will be in the 'packages' folder with the respective version x.x.x. (i.e. localytics-unity-android-x.x.x.unitypackage and localytics-unity-ios-x.x.x.unitypackage)
 
 2. Import the Unity Packages
-  
+
   Go to "Asset" -> "Import Package" -> "Custom Package..." and Navigate to the generated .unitypackage for Android and/or iOS in Step 1.
 
 
@@ -24,10 +24,10 @@ You will need development environment setup for Unity, Android and/or iOS. After
 1. Inside Unity, enable AdSupport framework within **Import Settings** of 'Assets/Plugins/iOS/libLocalytics.a'
 
 2. Initialization in UnityAppController
-   
+
   Inside Unity, LocalyticsAppController.mm is included within 'Assets/Plugins/iOS' as a template; if the application already have another UnityAppController, they need to be merged. You can also modified the file within the exported XCode project, but the changes won't persist if the project is regenerated from Unity.
   * call autoIntegrate with your Locatlyics App Key
-  
+
     ```
     [Localytics autoIntegrate:@"xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" launchOptions:launchOptions];
     ```
@@ -38,13 +38,13 @@ You will need development environment setup for Unity, Android and/or iOS. After
 
 ### Android
 1. Inside Unity, AndroidManifest.xml is included within 'Assets/Plugins/Android' as a sample; you may provide your own. You can also modified the file within the exported Android project, but the changes won't persist if the project is regenerated from Unity. The following changes are needed in the sample AndroidManifest.xml, or they need to be added to your existing AndroidManifest.xml:
-  * Replace the android:value in the sample with your Localytics App Key 
-  
+  * Replace the android:value in the sample with your Localytics App Key
+
     ```
     <meta-data android:name="LOCALYTICS_APP_KEY" android:value="xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/>
   ```
   * Replace YOUR.PACKAGE.NAME with your application's package identifier
-  
+
     ```
     // e.g.,
     <permission android:name="YOUR.PACKAGE.NAME.permission.C2D_MESSAGE" android:protectionLevel="signature" />
@@ -52,24 +52,24 @@ You will need development environment setup for Unity, Android and/or iOS. After
     ...
     ```
   * (Optional) Setup Push with your Project Number (not the Project ID string).
-  
+
     ```
     // Important: You need to escape a space in front
     // Otherwise it will be interpreted as an int,
-    // which is not a large enough data type to hold a project ID 
+    // which is not a large enough data type to hold a project ID
     <meta-data android:name="LOCALYTICS_PUSH_PROJECT_ID" android:value="\ #################"/>
     ```
 
 2. Modifying Application launcher
-  
+
   If the existing Unity Android Project already has a main Application/Activity defined, you will need to merge this with our class.  For references on what is needed refer the application and activity class inside localytics-android/src within this repository; you can also inspect the class inside Android Studio). Basically the following is needed.
   * Inside `onCreate()` of com.localytics.android.unity.LocalyticsApplication.java or your main application, call this
-    
+
     ```
     registerActivityLifecycleCallbacks(new LocalyticsActivityLifecycleCallbacks(this));
     ```
   * Inside `onCreate()` of com.localytics.android.unity.LocalyticsUnityPlayerActivity.java or your main activity, you may want to register Push. Most of the other code within this file are the same as the template Activity generated (i.e. UnityPlayerActivity).
-    
+
     ```
     try
     {
@@ -129,9 +129,8 @@ A small subset of the API requires preprocessor directives:
 #if UNITY_IOS
 
 Localytics.InAppAdIdParameterEnabled;
-Localytics.IsCollectingAdvertisingIdentifier;
 Localytics.PushToken;
-	
+
 #elif UNITY_ANDROID
 
 Localytics.PushDisabled;
@@ -262,7 +261,6 @@ public static string MessagingHost
 public static bool OptedOut
 public static string ProfilesHost
 public static bool TestModeEnabled
-public static long SessionTimeoutInterval
 
 
 #if UNITY_ANDROID /// Android Only
@@ -271,7 +269,6 @@ public static string PushRegistrationId
 public static void ClearInAppMessageDisplayActivity()
 #elif UNITY_IOS /// iOS Only
 public static string PushToken
-public static bool IsCollectingAdvertisingIdentifier
 public static bool InAppAdIdParameterEnabled
 #endif
 

@@ -77,6 +77,32 @@ namespace LocalyticsUnity {
 				emailAddress = value;
 			}
 		}
+
+		public Dictionary<string, string> ToDictionary()
+		{
+			Dictionary<string, string> dict = new Dictionary<string, string>();
+			if (customerId != null)
+			{
+				dict.Add("customer_id", customerId);
+			}
+			if (firstName != null)
+			{
+				dict.Add("first_name", firstName);
+			}
+			if (lastName != null)
+			{
+				dict.Add("last_name", lastName);
+			}
+			if (fullName != null)
+			{
+				dict.Add("full_name", fullName);
+			}
+			if (emailAddress != null)
+			{
+				dict.Add("email_address", emailAddress);
+			}
+			return dict;
+		}
 	}
 
 	public class RegionInfo
@@ -354,7 +380,7 @@ namespace LocalyticsUnity {
 #if UNITY_ANDROID
 			public delegate void LocalyticsDidUpdateLocation(AndroidJavaObject location);
 #else
-			public delegate void LocalyticsDidUpdateLocation(LocationInfo location);
+			public delegate void LocalyticsDidUpdateLocation(Dictionary<string, object> locationDict);
 #endif
 
 			public static event LocalyticsDidUpdateLocation OnLocalyticsDidUpdateLocation;
@@ -441,7 +467,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagPurchased", itemName, itemId, itemType, new AndroidJavaObject("java/lang/Long", itemPrice), DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagPurchased(itemName, itemId, itemType, itemPrice, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -452,7 +483,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagAddedToCart", itemName, itemId, itemType, new AndroidJavaObject("java/lang/Long", itemPrice), DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagAddedToCart(itemName, itemId, itemType, itemPrice, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -463,7 +499,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagStartedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagStartedCheckout(totalPrice, itemCount, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -474,7 +515,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagCompletedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagCompletedCheckout(totalPrice, itemCount, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -485,7 +531,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagContentViewed", contentName, contentId, contentType, DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagContentViewed(contentName, contentId, contentType, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -496,7 +547,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagSearched", queryText, contentType, new AndroidJavaObject("java/lang/Long", resultCount), DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagSearched(queryText, contentType, resultCount, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -507,7 +563,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagShared", contentName, contentId, contentType, methodName, DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagShared(contentName, contentId, contentType, methodName, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -518,7 +579,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagContentRated", contentName, contentId, contentType, new AndroidJavaObject("java/lang/Long", rating), DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagContentRated(contentName, contentId, contentType, rating, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -529,7 +595,17 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagCustomerRegistered", ConvertCustomerInfo(customer), methodName, DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string customerValues = "";
+				if (customer != null)
+				{
+					customerValues = MiniJSON.jsonEncode(customer.ToDictionary());
+				}
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagCustomerRegistered(customerValues, methodName, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -540,7 +616,17 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagCustomerLoggedIn", ConvertCustomerInfo(customer), methodName, DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string customerValues = "";
+				if (customer != null)
+				{
+					customerValues = MiniJSON.jsonEncode(customer.ToDictionary());
+				}
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagCustomerLoggedIn(customerValues, methodName, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -551,7 +637,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagCustomerLoggedOut", DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagCustomerLoggedOut(values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -562,7 +653,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("tagInvited", methodName, DictionaryToMap(attributes));
 				#elif UNITY_IOS
-
+				string values = "";
+				if (attributes != null)
+				{
+					values = MiniJSON.jsonEncode(attributes);
+				}
+				_tagInvited(methodName, values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -666,8 +762,7 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
 				#elif UNITY_IOS
-				string values = MiniJSON.jsonEncode (new long[] { attributeValue });
-				_removeProfileAttributesFromSet (values, attributeName, (int)scope);
+				_setProfileAttributeLong (attributeName, attributeValue, (int)scope);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -679,7 +774,7 @@ namespace LocalyticsUnity {
 				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
 				#elif UNITY_IOS
 				string values = MiniJSON.jsonEncode (attributeValue);
-				_removeProfileAttributesFromSet (values, attributeName, (int)scope);
+				_setProfileAttributeLongArray (attributeName, values, (int)scope);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -690,8 +785,7 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
 				#elif UNITY_IOS
-				string values = MiniJSON.jsonEncode (new string[] { attributeValue });
-				_removeProfileAttributesFromSet (values, attributeName, (int)scope);
+				_setProfileAttributeString (attributeName, attributeValue, (int)scope);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -703,7 +797,18 @@ namespace LocalyticsUnity {
 				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
 				#elif UNITY_IOS
 				string values = MiniJSON.jsonEncode (attributeValue);
-				_removeProfileAttributesFromSet (values, attributeName, (int)scope);
+				_setProfileAttributeStringArray (attributeName, values, (int)scope);
+				#else
+				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+
+			public static void DeleteProfileAttribute(string attributeName, ProfileScope scope = ProfileScope.Application)
+			{
+				#if UNITY_ANDROID
+				LocalyticsClass.CallStatic("deleteProfileAttribute", attributeName, GetProfileScopeEnum(scope));
+				#elif UNITY_IOS
+				_deleteProfileAttribute (attributeName, (int)scope);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -751,7 +856,7 @@ namespace LocalyticsUnity {
 				{
 					values = MiniJSON.jsonEncode (attributeValue);
 				}
-				_removeProfileAttributesFromSet (values, attributeName, (int)scope);
+				_removeProfileAttributesFromSet (attributeName, values, (int)scope);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -767,7 +872,7 @@ namespace LocalyticsUnity {
 				{
 					values = MiniJSON.jsonEncode (attributeValue);
 				}
-				_removeProfileAttributesFromSet (values, attributeName, (int)scope);
+				_removeProfileAttributesFromSet (attributeName, values, (int)scope);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -790,17 +895,6 @@ namespace LocalyticsUnity {
 				LocalyticsClass.CallStatic("decrementProfileAttribute", attributeName, decrementValue, GetProfileScopeEnum(scope));
 				#elif UNITY_IOS
 				_decrementProfileAttribute (attributeName, decrementValue, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void DeleteProfileAttribute(string attributeName, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("deleteProfileAttribute", attributeName, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				_deleteProfileAttribute (attributeName, (int)scope);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1017,22 +1111,18 @@ namespace LocalyticsUnity {
 
 			public static bool LocationMonitoringEnabled
 			{
+#if UNITY_ANDROID
 				get
 				{
-					#if UNITY_ANDROID
 					return LocalyticsClass.CallStatic<bool>("isLocationMonitoringEnabled");
-					#elif UNITY_IOS
-					// return _testModeEnabled();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
 				}
+#endif
 				set
 				{
 					#if UNITY_ANDROID
 					LocalyticsClass.CallStatic("setLocationMonitoringEnabled", value);
 					#elif UNITY_IOS
-					// _setTestModeEnabled(value);
+					_setLocationMonitoringEnabled(value);
 					#else
 					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 					#endif
@@ -1045,7 +1135,8 @@ namespace LocalyticsUnity {
 				AndroidJavaObject listObject = LocalyticsClass.CallStatic<AndroidJavaObject>("getGeofencesToMonitor", latitude, longitude);
 				return ConvertGeofencesList(listObject);
 				#elif UNITY_IOS
-				// _setInAppMessageDismissButtonLocation((uint)value);
+				string json = _getGeofencesToMonitor(latitude, longitude);
+				return ConvertGeofencesListFromJson(json);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1056,7 +1147,12 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("triggerRegions", ConvertRegionInfoList(regions), GetRegionEventEnum(regionEvent));
 				#elif UNITY_IOS
-				// _setInAppMessageDismissButtonLocation((uint)value);
+				string values = "";
+				if (regions != null)
+				{
+					values = ConvertRegionInfoList(regions);
+				}
+				_triggerRegions(values, (int)regionEvent);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1072,7 +1168,7 @@ namespace LocalyticsUnity {
 
 				LocalyticsClass.CallStatic("setLocationListener", _locationListener);
 				#elif UNITY_IOS
-				//_registerReceiveMessagingCallback (ReceiveMessagingMessage);
+				_registerReceiveLocationCallback (ReceiveLocationMessage);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1088,7 +1184,7 @@ namespace LocalyticsUnity {
 
 				LocalyticsClass.CallStatic("setLocationListener", null);
 				#elif UNITY_IOS
-				//_removeMessagingCallback ();
+				_removeLocationCallback ();
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1164,7 +1260,7 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/String", stringValue));
 				#elif UNITY_IOS
-				//_setLocation(location.latitude, location.longitude);
+				_setStringOption(key, stringValue);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1175,7 +1271,7 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/Long", longValue));
 				#elif UNITY_IOS
-				//_setLocation(location.latitude, location.longitude);
+				_setLongOption(key, longValue);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1186,7 +1282,7 @@ namespace LocalyticsUnity {
 				#if UNITY_ANDROID
 				LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/Boolean", boolValue));
 				#elif UNITY_IOS
-				//_setLocation(location.latitude, location.longitude);
+				_setBoolOption(key, boolValue);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -1272,19 +1368,6 @@ namespace LocalyticsUnity {
 				return _pushToken();
 			}
 		}
-
-		public static bool IsCollectingAdvertisingIdentifier
-		{
-			get
-			{
-				return _isCollectingAdvertisingIdentifier();
-			}
-			set
-			{
-				_setCollectingAdvertisingIdentifier(value);
-			}
-		}
-
 
 		public static bool InAppAdIdParameterEnabled
 		{
@@ -1928,62 +2011,137 @@ namespace LocalyticsUnity {
 		 * - iOS Specific delegates
 		 * - MonoPInvokeCallback
 		 * */
-		[DllImport("__Internal")] private static extern string _appKey();
-		[DllImport("__Internal")] private static extern string _analyticsHost();
-		[DllImport("__Internal")] private static extern void _setAnalyticsHost(string analyticsHost);
-		[DllImport("__Internal")] private static extern string _customerId();
-		[DllImport("__Internal")] private static extern void _setCustomerId(string customerId);
-		[DllImport("__Internal")] private static extern uint _inAppMessageDismissButtonLocation();
-		[DllImport("__Internal")] private static extern void _setInAppMessageDismissButtonLocation(uint location);
-		[DllImport("__Internal")] private static extern string _installId();
-		[DllImport("__Internal")] private static extern bool _isCollectingAdvertisingIdentifier();
-		[DllImport("__Internal")] private static extern void _setCollectingAdvertisingIdentifier(bool collectingAdvertisingIdentifier);
-		[DllImport("__Internal")] private static extern string _libraryVersion();
-		[DllImport("__Internal")] private static extern bool _isLoggingEnabled();
-		[DllImport("__Internal")] private static extern void _setLoggingEnabled(bool loggingEnabled);
-		[DllImport("__Internal")] private static extern string _messagingHost();
-		[DllImport("__Internal")] private static extern void _setMessagingHost(string messagingHost);
+		[DllImport("__Internal")] private static extern void _upload();
+		[DllImport("__Internal")] private static extern void _openSession();
+		[DllImport("__Internal")] private static extern void _closeSession();
+		[DllImport("__Internal")] private static extern void _tagEvent(string eventName, string attributes, long customerValueIncrease);
+		[DllImport("__Internal")] private static extern void _tagPurchased(string itemName, string itemId, string itemType, long itemPrice, string attributes);
+		[DllImport("__Internal")] private static extern void _tagAddedToCart(string itemName, string itemId, string itemType, long itemPrice, string attributes);
+		[DllImport("__Internal")] private static extern void _tagStartedCheckout(long totalPrice, long itemCount, string attributes);
+		[DllImport("__Internal")] private static extern void _tagCompletedCheckout(long totalPrice, long itemCount, string attributes);
+		[DllImport("__Internal")] private static extern void _tagContentViewed(string contentName, string contentId, string contentType, string attributes);
+		[DllImport("__Internal")] private static extern void _tagSearched(string queryText, string contentType, long resultCount, string attributes);
+		[DllImport("__Internal")] private static extern void _tagShared(string contentName, string contentId, string contentType, string methodName, string attributes);
+		[DllImport("__Internal")] private static extern void _tagContentRated(string contentName, string contentId, string contentType, long rating, string attributes);
+		[DllImport("__Internal")] private static extern void _tagCustomerRegistered(string customer, string methodName, string attributes);
+		[DllImport("__Internal")] private static extern void _tagCustomerLoggedIn(string customer, string methodName, string attributes);
+		[DllImport("__Internal")] private static extern void _tagCustomerLoggedOut(string attributes);
+		[DllImport("__Internal")] private static extern void _tagInvited(string methodName, string attributes);
+		[DllImport("__Internal")] private static extern void _tagScreen(string screen);
+		[DllImport("__Internal")] private static extern string _getCustomDimension(int dimension);
+		[DllImport("__Internal")] private static extern void _setCustomDimension(int dimension, string value);
 		[DllImport("__Internal")] private static extern bool _isOptedOut();
 		[DllImport("__Internal")] private static extern void _setOptedOut(bool optedOut);
-		[DllImport("__Internal")] private static extern string _profilesHost();
-		[DllImport("__Internal")] private static extern void _setProfilesHost(string profilesHost);
-		[DllImport("__Internal")] private static extern string _pushToken();
-		[DllImport("__Internal")] private static extern bool _testModeEnabled();
-		[DllImport("__Internal")] private static extern void _setTestModeEnabled(bool enabled);
-		[DllImport("__Internal")] private static extern double _sessionTimeoutInterval();
-		[DllImport("__Internal")] private static extern void _setSessionTimeoutInterval(double timeoutInterval);
-		[DllImport("__Internal")] private static extern void _addProfileAttributesToSet(string attribute, string values, int scope);
-		[DllImport("__Internal")] private static extern void _closeSession();
-		[DllImport("__Internal")] private static extern void _decrementProfileAttribute(string attributeName, long value, int scope);
+		[DllImport("__Internal")] private static extern void _registerReceiveAnalyticsCallback(ReceiveAnalyticsDelegate callback);
+		[DllImport("__Internal")] private static extern void _removeAnalyticsCallback ();
+		[DllImport("__Internal")] private static extern void _setProfileAttributeLong (string attributeName, long value, int scope);
+		[DllImport("__Internal")] private static extern void _setProfileAttributeLongArray (string attributeName, string values, int scope);
+		[DllImport("__Internal")] private static extern void _setProfileAttributeString (string attributeName, string value, int scope);
+		[DllImport("__Internal")] private static extern void _setProfileAttributeStringArray (string attributeName, string values, int scope);
 		[DllImport("__Internal")] private static extern void _deleteProfileAttribute(string attributeName, int scope);
+		[DllImport("__Internal")] private static extern void _addProfileAttributesToSet(string attribute, string values, int scope);
+		[DllImport("__Internal")] private static extern void _removeProfileAttributesFromSet(string attributeName, string attributeValue, int scope);
+		[DllImport("__Internal")] private static extern void _incrementProfileAttribute(string attributeName, long attributeValue, int scope);
+		[DllImport("__Internal")] private static extern void _decrementProfileAttribute(string attributeName, long value, int scope);
 		[DllImport("__Internal")] private static extern void _setCustomerEmail(string email);
 		[DllImport("__Internal")] private static extern void _setCustomerFirstName(string firstName);
 		[DllImport("__Internal")] private static extern void _setCustomerLastName(string lastName);
 		[DllImport("__Internal")] private static extern void _setCustomerFullName(string fullName);
+		[DllImport("__Internal")] private static extern void _triggerInAppMessage(string triggerName, string attributes);
 		[DllImport("__Internal")] private static extern void _dismissCurrentInAppMessage();
-		[DllImport("__Internal")] private static extern string _getCustomDimension(int dimension);
-		[DllImport("__Internal")] private static extern string _getIdentifier(string key);
-		[DllImport("__Internal")] private static extern void _incrementProfileAttribute(string attributeName, long attributeValue, int scope);
-		[DllImport("__Internal")] public static extern void _openSession();
-		[DllImport("__Internal")] private static extern void _registerReceiveAnalyticsCallback(ReceiveAnalyticsDelegate callback);
-		[DllImport("__Internal")] private static extern void _removeAnalyticsCallback ();
-		[DllImport("__Internal")] private static extern bool _isInAppAdIdParameterEnabled();
-		[DllImport("__Internal")] private static extern void _setInAppAdIdParameterEnabled(bool appAdIdEnabled);
+		[DllImport("__Internal")] private static extern uint _inAppMessageDismissButtonLocation();
+		[DllImport("__Internal")] private static extern void _setInAppMessageDismissButtonLocation(uint location);
+		[DllImport("__Internal")] private static extern bool _testModeEnabled();
+		[DllImport("__Internal")] private static extern void _setTestModeEnabled(bool enabled);
 		[DllImport("__Internal")] private static extern void _registerReceiveMessagingCallback(ReceiveMessagingDelegate callback);
 		[DllImport("__Internal")] private static extern void _removeMessagingCallback ();
-		[DllImport("__Internal")] private static extern void _removeProfileAttributesFromSet(string attributeName, string attributeValue, int scope);
-		[DllImport("__Internal")] private static extern void _setCustomDimension(int dimension, string value);
+		[DllImport("__Internal")] private static extern void _setLocationMonitoringEnabled(bool enabled);
+		[DllImport("__Internal")] private static extern string _getGeofencesToMonitor(double latitude, double longitude);
+		[DllImport("__Internal")] private static extern void _triggerRegions(string regions, int regionEvent);
+		[DllImport("__Internal")] private static extern void _registerReceiveLocationCallback(ReceiveLocationDelegate callback);
+		[DllImport("__Internal")] private static extern void _removeLocationCallback();
+		[DllImport("__Internal")] private static extern string _customerId();
+		[DllImport("__Internal")] private static extern void _setCustomerId(string customerId);
+		[DllImport("__Internal")] private static extern string _getIdentifier(string key);
 		[DllImport("__Internal")] private static extern void _setIdentifier(string key, string value);
 		[DllImport("__Internal")] private static extern void _setLocation(double latitude, double longitude);
-		[DllImport("__Internal")] private static extern void _setProfileAttribute (string attributeName, string values, int scope);
-		[DllImport("__Internal")] private static extern void _tagEvent(string eventName, string attributes, long customerValueIncrease);
-		[DllImport("__Internal")] private static extern void _tagScreen(string screen);
-		[DllImport("__Internal")] private static extern void _triggerInAppMessage(string triggerName, string attributes);
-		[DllImport("__Internal")] private static extern void _upload();
+		[DllImport("__Internal")] private static extern void _setStringOption(string key, string value);
+		[DllImport("__Internal")] private static extern void _setBoolOption(string key, bool value);
+		[DllImport("__Internal")] private static extern void _setLongOption(string key, long value);
+		[DllImport("__Internal")] private static extern string _appKey();
+		[DllImport("__Internal")] private static extern string _installId();
+		[DllImport("__Internal")] private static extern string _libraryVersion();
+		[DllImport("__Internal")] private static extern bool _isLoggingEnabled();
+		[DllImport("__Internal")] private static extern void _setLoggingEnabled(bool loggingEnabled);
+		[DllImport("__Internal")] private static extern string _pushToken();
+		[DllImport("__Internal")] private static extern bool _isInAppAdIdParameterEnabled();
+		[DllImport("__Internal")] private static extern void _setInAppAdIdParameterEnabled(bool appAdIdEnabled);
 
+		private static double ConvertToDouble(object obj)
+		{
+			IConvertible convert = obj as IConvertible;
+			return convert.ToDouble(null);
+		}
+
+		private static int ConvertToInt(object obj)
+		{
+			IConvertible convert = obj as IConvertible;
+			return convert.ToInt32(null);
+		}
+
+		private static Dictionary<string, string> ConvertToDictionary(object obj)
+		{
+			Dictionary<string, string> convert = new Dictionary<string, string>();
+			if (obj != null) {
+				Dictionary<string, object> stringToObj = (Dictionary<string, object>) obj;
+				foreach (KeyValuePair<string, object> kvp in stringToObj)
+				{
+					convert.Add(kvp.Key, kvp.Value.ToString());
+				}
+			}
+
+			return convert;
+		}
+
+		private static string ConvertRegionInfoList(List<CircularRegionInfo> regions)
+		{
+			List<string> list = new List<string>();
+			foreach (CircularRegionInfo info in regions)
+			{
+				list.Add(info.UniqueId);
+			}
+
+			return MiniJSON.jsonEncode(list.ToArray());
+		}
+
+		private static List<CircularRegionInfo> ConvertGeofencesList(List<object> geofences)
+		{
+			List<CircularRegionInfo> geofencesToReturn = new List<CircularRegionInfo>();
+			foreach (object obj in geofences)
+			{
+				Dictionary<string, object> dict = (Dictionary<string, object>) obj;
+				CircularRegionInfo info = new CircularRegionInfo();
+				info.UniqueId = (string) dict["unique_id"];
+				info.Latitude = ConvertToDouble(dict["latitude"]);
+				info.Longitude = ConvertToDouble(dict["longitude"]);
+				info.Radius = ConvertToInt(dict["radius"]);
+				info.Name = (string) dict["name"];
+				info.Type = (string) dict["type"];
+				info.Attributes = ConvertToDictionary(dict["attributes"]);
+				geofencesToReturn.Add(info);
+			}
+			return geofencesToReturn;
+		}
+
+		private static List<CircularRegionInfo> ConvertGeofencesListFromJson(string json)
+		{
+			List<object> geofences = MiniJSON.jsonDecode(json, true) as List<object>;
+			return ConvertGeofencesList(geofences);
+		}
 
 		private delegate void ReceiveAnalyticsDelegate(string message);
 		private delegate void ReceiveMessagingDelegate(string message);
+		private delegate void ReceiveLocationDelegate(string message);
 
 		[MonoPInvokeCallback(typeof(ReceiveAnalyticsDelegate))]
 		private static void ReceiveAnalyticsMessage(string message)
@@ -2000,7 +2158,9 @@ namespace LocalyticsUnity {
 					bool willIsUpgrade = Boolean.Parse (willOpen["isUpgrade"].ToString ());
 					bool willIsResume = Boolean.Parse (willOpen["isResume"].ToString ());
 					if (OnLocalyticsSessionWillOpen != null)
+					{
 						OnLocalyticsSessionWillOpen(willIsFirst, willIsUpgrade, willIsResume);
+					}
 					break;
 				case "localyticsSessionDidOpen":
 					var didOpen = (Hashtable)json["params"];
@@ -2008,7 +2168,9 @@ namespace LocalyticsUnity {
 					bool didIsUpgrade = Boolean.Parse (didOpen["isUpgrade"].ToString ());
 					bool didIsResume = Boolean.Parse (didOpen["isResume"].ToString ());
 					if (OnLocalyticsSessionDidOpen != null)
+					{
 						OnLocalyticsSessionDidOpen(didIsFirst, didIsUpgrade, didIsResume);
+					}
 					break;
 				case "localyticsDidTagEvent":
 					var tagParams = (Hashtable)json["params"];
@@ -2020,7 +2182,7 @@ namespace LocalyticsUnity {
 						var attributes = ((Hashtable)tagParams["attributes"]);
 						foreach(var key in attributes.Keys)
 						{
-							attributesDictionary.Add ((string)key, (string)attributes[key]);
+							attributesDictionary.Add ((string)key, attributes[key].ToString());
 						}
 					}
 					long customerValueIncrease = 0;
@@ -2029,12 +2191,16 @@ namespace LocalyticsUnity {
 						customerValueIncrease = long.Parse(tagParams["customerValueIncrease"].ToString());
 					}
 					if (OnLocalyticsDidTagEvent != null)
+					{
 						OnLocalyticsDidTagEvent(eventName, attributesDictionary, customerValueIncrease);
+					}
 
 					break;
 				case "localyticsSessionWillClose":
 					if (OnLocalyticsSessionWillClose != null)
+					{
 						OnLocalyticsSessionWillClose();
+					}
 					break;
 				}
 			}
@@ -2055,19 +2221,73 @@ namespace LocalyticsUnity {
 				{
 				case "localyticsWillDisplayInAppMessage":
 					if (OnLocalyticsWillDisplayInAppMessage != null)
+					{
 						OnLocalyticsWillDisplayInAppMessage();
+					}
 					break;
 				case "localyticsDidDisplayInAppMessage":
 					if (OnLocalyticsDidDisplayInAppMessage != null)
+					{
 						OnLocalyticsDidDisplayInAppMessage();
+					}
 					break;
 				case "localyticsWillDismissInAppMessage":
 					if (OnLocalyticsWillDismissInAppMessage != null)
+					{
 						OnLocalyticsWillDismissInAppMessage();
+					}
 					break;
 				case "localyticsDidDismissInAppMessage":
 					if (OnLocalyticsDidDismissInAppMessage != null)
+					{
 						OnLocalyticsDidDismissInAppMessage();
+					}
+					break;
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError ("There was a problem decoding an analytics message from the Localytics plugin: " + ex.Message);
+			}
+		}
+
+		[MonoPInvokeCallback(typeof(ReceiveLocationDelegate))]
+		private static void ReceiveLocationMessage(string message)
+		{
+			try
+			{
+				Dictionary<string, object> json = MiniJSON.jsonDecode(message, true) as Dictionary<string, object>;
+				string e = json["event"].ToString();
+				switch(e)
+				{
+				case "localyticsDidTriggerRegions:withEvent":
+					Dictionary<string, object> didTrigger = (Dictionary<string, object>) json["params"];
+					List<object> regions = (List<object>) didTrigger["regions"];
+					int eventInt = ConvertToInt(didTrigger["regionEvent"]);
+					List<CircularRegionInfo> infoList = ConvertGeofencesList(regions);
+					if (OnLocalyticsDidTriggerRegions != null)
+					{
+						OnLocalyticsDidTriggerRegions(infoList, (RegionEvent)eventInt);
+					}
+					break;
+				case "localyticsDidUpdateMonitoredRegions:removeRegions":
+					Dictionary<string, object> didUpdate = (Dictionary<string, object>) json["params"];
+					List<object> added = (List<object>) didUpdate["addedRegions"];
+					List<object> removed = (List<object>) didUpdate["removedRegions"];
+					List<CircularRegionInfo> addedInfoList = ConvertGeofencesList(added);
+					List<CircularRegionInfo> removedInfoList = ConvertGeofencesList(removed);
+					if (OnLocalyticsDidUpdateMonitoredGeofences != null)
+					{
+						OnLocalyticsDidUpdateMonitoredGeofences(addedInfoList, removedInfoList);
+					}
+					break;
+				case "localyticsDidUpdateLocation":
+					Dictionary<string, object> updateLocation = (Dictionary<string, object>) json["params"];
+					Dictionary<string, object> locationDict = (Dictionary<string, object>) updateLocation["location"];
+					if (OnLocalyticsDidUpdateLocation != null)
+					{
+						OnLocalyticsDidUpdateLocation(locationDict);
+					}
 					break;
 				}
 			}

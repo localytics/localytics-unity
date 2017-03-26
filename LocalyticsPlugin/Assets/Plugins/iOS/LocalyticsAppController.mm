@@ -9,7 +9,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [Localytics autoIntegrate:@"App Key" launchOptions:launchOptions];
- 
+
     // If you are using Localytics Messaging include the following code to register for push notifications
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)])
     {
@@ -22,17 +22,11 @@
     {
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
     }
-    
+
     [super application:application didFinishLaunchingWithOptions:launchOptions];
-    
+
     return YES;
 }
-
-- (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *))reply
-{
-    [Localytics handleWatchKitExtensionRequest:userInfo reply:reply];
-}
-
 
 @end
 

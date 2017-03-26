@@ -11,14 +11,24 @@ public static class GenerateBundles
                               "Assets/Localytics/Localytics.cs",
                               "Assets/Localytics/MiniJSON.cs",
                               "Assets/Plugins/iOS/libLocalytics.a",
+                              "Assets/Plugins/iOS/LLCampaignBase.h",
+                              "Assets/Plugins/iOS/LLCustomer.h",
+                              "Assets/Plugins/iOS/LLGeofence.h",
+                              "Assets/Plugins/iOS/LLInboxCampaign.h",
+                              "Assets/Plugins/iOS/LLInboxDetailViewController.h",
+                              "Assets/Plugins/iOS/LLInboxViewController.h",
+                              "Assets/Plugins/iOS/LLPlacesCampaign.h",
+                              "Assets/Plugins/iOS/LLRegion.h",
+                              "Assets/Plugins/iOS/LLWebViewCampaign.h",
                               "Assets/Plugins/iOS/Localytics.h",
+                              "Assets/Plugins/iOS/LocalyticsTypes.h",
                               "Assets/Plugins/iOS/LocalyticsAppController.mm",
                               "Assets/Plugins/iOS/LocalyticsUnity.mm",
                               "Assets/Plugins/iOS/LocalyticsUnity.h",
                           };
 
 		System.IO.Directory.CreateDirectory ("../packages");
-        AssetDatabase.ExportPackage(assets, "../packages/localytics-unity-ios-3.5.1.unitypackage");
+        AssetDatabase.ExportPackage(assets, "../packages/localytics-unity-ios-4.2.0.unitypackage");
     }
 
     [MenuItem("Localytics/Build Android")]
