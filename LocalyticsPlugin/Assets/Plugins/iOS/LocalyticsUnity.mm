@@ -20,7 +20,7 @@ char* LLMakeStringCopy (const char* string)
     {
         return NULL;
     }
-    
+
     char* res = (char*)malloc(strlen(string) + 1);
     strcpy(res, string);
     return res;
@@ -326,7 +326,7 @@ static LocationDelegate *_locationInstance;
         {
             _locationInstance = [[LocationDelegate alloc] init];
         }
-        
+
         return _locationInstance;
     }
 }
@@ -343,7 +343,7 @@ static LocationDelegate *_locationInstance;
 
 - (id)init {
     self = [super init];
-    
+
     return self;
 }
 
@@ -355,7 +355,7 @@ static LocationDelegate *_locationInstance;
                                  @"regionEvent": @(event)};
         NSDictionary *call = @{@"event": @"localyticsDidTriggerRegions:withEvent",
                                @"params": params};
-        
+
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:call
                                                            options:0
@@ -373,7 +373,7 @@ static LocationDelegate *_locationInstance;
                                  @"removedRegions": LLMakeNSArrayFromRegions(removedRegions)};
         NSDictionary *call = @{@"event": @"localyticsDidUpdateMonitoredRegions:removeRegions",
                                @"params": params};
-        
+
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:call
                                                            options:0
@@ -390,7 +390,7 @@ static LocationDelegate *_locationInstance;
         NSDictionary *params = @{@"location": LLMakeNSDictionaryFromLocation(location)};
         NSDictionary *call = @{@"event": @"localyticsDidUpdateLocation",
                                @"params": params};
-        
+
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:call
                                                            options:0
@@ -434,14 +434,26 @@ extern "C"
         [Localytics tagAddedToCart:LLCreateNSString(itemName) itemId:LLCreateNSString(itemId) itemType:LLCreateNSString(itemType) itemPrice:[NSNumber numberWithLong:itemPrice] attributes:LLMakeNSDictionary(attributes)];
     }
 
-    void _tagStartedCheckout(long totalPrice, long itemCount, const char* attributes)
+    void _tagStartedCheckout(const char* attributes)
     {
-        [Localytics tagStartedCheckout:[NSNumber numberWithLong:totalPrice] itemCount:[NSNumber numberWithLong:itemCount] attributes:LLMakeNSDictionary(attributes)];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:LLMakeNSDictionary(attributes)];
+        NSInteger totalPrice = [dict[@"ll_total_price"] integerValue];
+        NSInteger itemCount = [dict[@"ll_item_count"] integerValue];
+        // Remove these from the generic attributes
+        [dict removeObjectForKey:@"ll_total_price"];
+        [dict removeObjectForKey:@"ll_item_count"];
+        [Localytics tagStartedCheckout:[NSNumber numberWithInteger:totalPrice] itemCount:[NSNumber numberWithInteger:itemCount] attributes:[dict copy]];
     }
 
-    void _tagCompletedCheckout(long totalPrice, long itemCount, const char* attributes)
+    void _tagCompletedCheckout(const char* attributes)
     {
-        [Localytics tagCompletedCheckout:[NSNumber numberWithLong:totalPrice] itemCount:[NSNumber numberWithLong:itemCount] attributes:LLMakeNSDictionary(attributes)];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:LLMakeNSDictionary(attributes)];
+        NSInteger totalPrice = [dict[@"ll_total_price"] integerValue];
+        NSInteger itemCount = [dict[@"ll_item_count"] integerValue];
+        // Remove these from the generic attributes
+        [dict removeObjectForKey:@"ll_total_price"];
+        [dict removeObjectForKey:@"ll_item_count"];
+        [Localytics tagCompletedCheckout:[NSNumber numberWithInteger:totalPrice] itemCount:[NSNumber numberWithInteger:itemCount] attributes:[dict copy]];
     }
 
     void _tagContentViewed(const char* contentName, const char* contentId, const char* contentType, const char* attributes)
@@ -463,7 +475,7 @@ extern "C"
     {
         [Localytics tagContentRated:LLCreateNSString(contentName) contentId:LLCreateNSString(contentId) contentType:LLCreateNSString(contentType) rating:[NSNumber numberWithLong:rating] attributes:LLMakeNSDictionary(attributes)];
     }
-    
+
     void _tagCustomerRegistered(const char* customer, const char* methodName, const char* attributes)
     {
         [Localytics tagCustomerRegistered:LLMakeLLCustomer(customer) methodName:LLCreateNSString(methodName) attributes:LLMakeNSDictionary(attributes)];
@@ -488,43 +500,43 @@ extern "C"
     {
         [Localytics tagScreen:LLCreateNSString(screenName)];
     }
-    
+
     const char* _getCustomDimension(int dimension)
     {
         return LLMakeStringCopy([[Localytics valueForCustomDimension:dimension] UTF8String]);
     }
-    
+
     void _setCustomDimension(int dimension, const char* value)
     {
         [Localytics setValue:LLCreateNSString(value) forCustomDimension:dimension];
     }
-    
+
     bool _isOptedOut()
     {
         return [Localytics isOptedOut];
     }
-    
+
     void _setOptedOut(bool optedOut)
     {
         [Localytics setOptedOut:optedOut];
     }
-    
+
     void _registerReceiveAnalyticsCallback(LocalyticsAnalyticsCallback callback)
     {
         [AnalyticsDelegate setCallback:callback];
         [Localytics setAnalyticsDelegate:[AnalyticsDelegate instance]];
     }
-    
+
     void _removeAnalyticsCallback()
     {
         [Localytics setAnalyticsDelegate:nil];
     }
-    
+
     void _setProfileAttributeLong(const char* attributeName, long value, int scope)
     {
         [Localytics setValue:[NSNumber numberWithLong:value] forProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
-    
+
     void _setProfileAttributeLongArray(const char* attributeName, const char* values, int scope)
     {
         NSArray *stringArray = LLMakeNSArray(values);
@@ -535,115 +547,115 @@ extern "C"
         }
         [Localytics setValue:[mutArray copy] forProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
-    
+
     void _setProfileAttributeString(const char* attributeName, const char* value, int scope)
     {
         [Localytics setValue:LLCreateNSString(value) forProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
-    
+
     void _setProfileAttributeStringArray(const char* attributeName, const char* values, int scope)
     {
         [Localytics setValue:LLMakeNSArray(values) forProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
-    
+
     void _deleteProfileAttribute(const char* attribute, int scope)
     {
         [Localytics deleteProfileAttribute:LLCreateNSString(attribute) withScope:(LLProfileScope)scope];
     }
-    
+
     void _addProfileAttributesToSet(const char* attribute, const char* values, int scope)
     {
         [Localytics addValues:LLMakeNSArray(values) toSetForProfileAttribute:LLCreateNSString(attribute) withScope:(LLProfileScope)scope];
     }
-    
+
     void _removeProfileAttributesFromSet(const char* attributeName, const char* values, int scope)
     {
         [Localytics removeValues:LLMakeNSArray(values) fromSetForProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
-    
+
     void _incrementProfileAttribute(const char* attributeName, long attributeValue, int scope)
     {
         [Localytics incrementValueBy:attributeValue forProfileAttribute:LLCreateNSString(attributeName) withScope:(LLProfileScope)scope];
     }
-    
+
     void _decrementProfileAttribute(const char* attribute, long value, int scope)
     {
         [Localytics decrementValueBy:value forProfileAttribute:LLCreateNSString(attribute) withScope:(LLProfileScope)scope];
     }
-    
+
     void _setCustomerEmail(const char* email)
     {
         [Localytics setCustomerEmail:LLCreateNSString(email)];
     }
-    
+
     void _setCustomerFirstName(const char* firstName)
     {
         [Localytics setCustomerFirstName:LLCreateNSString(firstName)];
     }
-    
+
     void _setCustomerLastName(const char* lastName)
     {
         [Localytics setCustomerLastName:LLCreateNSString(lastName)];
     }
-    
+
     void _setCustomerFullName(const char* fullName)
     {
         [Localytics setCustomerFullName:LLCreateNSString(fullName)];
     }
-    
+
     void _triggerInAppMessage(const char* triggerName, const char* attributes)
     {
         [Localytics triggerInAppMessage:LLCreateNSString(triggerName) withAttributes:LLMakeNSDictionary(attributes)];
     }
-    
+
     void _dismissCurrentInAppMessage()
     {
         [Localytics dismissCurrentInAppMessage];
     }
-    
+
     void _setInAppMessageDismissButtonLocation(uint location)
     {
         [Localytics setInAppMessageDismissButtonLocation:(LLInAppMessageDismissButtonLocation)location];
     }
-    
+
     uint _inAppMessageDismissButtonLocation()
     {
         return (uint)[Localytics inAppMessageDismissButtonLocation];
     }
-    
+
     bool _testModeEnabled()
     {
         return [Localytics isTestModeEnabled];
     }
-    
+
     void _setTestModeEnabled(bool enabled)
     {
         [Localytics setTestModeEnabled:enabled];
     }
-    
+
     void _registerReceiveMessagingCallback(LocalyticsMessagingCallback callback)
     {
         [MessagingDelegate setCallback:callback];
         [Localytics setMessagingDelegate:[MessagingDelegate instance]];
     }
-    
+
     void _removeMessagingCallback()
     {
         [Localytics setMessagingDelegate:nil];
     }
-    
+
     void _setLocationMonitoringEnabled(bool enabled)
     {
         [Localytics setLocationMonitoringEnabled:enabled];
     }
-    
+
     const char* _getGeofencesToMonitor(double latitude, double longitude)
     {
         CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
         NSArray<LLRegion *> *geofencesToMonitor = [Localytics geofencesToMonitor:coordinate];
         return LLMakeJsonFromRegions(geofencesToMonitor);
     }
-    
+
     void _triggerRegions(const char* regions, int regionEvent)
     {
         NSArray *regionIds = LLMakeNSArray(regions);
@@ -657,53 +669,53 @@ extern "C"
         }
         [Localytics triggerRegions:[toTrigger copy] withEvent:(LLRegionEvent)regionEvent];
     }
-    
+
     void _registerReceiveLocationCallback(LocalyticsLocationCallback callback)
     {
         [LocationDelegate setCallback:callback];
         [Localytics setLocationDelegate:[LocationDelegate instance]];
     }
-    
+
     void _removeLocationCallback()
     {
         [Localytics setLocationDelegate:nil];
     }
-    
+
     const char* _customerId()
     {
         return LLMakeStringCopy([[Localytics customerId] UTF8String]);
     }
-    
+
     void _setCustomerId(const char* customerId)
     {
         [Localytics setCustomerId:LLCreateNSString(customerId)];
     }
-    
+
     const char* _getIdentifier(const char* identifier)
     {
         return LLMakeStringCopy([[Localytics valueForIdentifier:LLCreateNSString(identifier)] UTF8String]);
     }
-    
+
     void _setIdentifier(const char* key, const char* value)
     {
         [Localytics setValue:LLCreateNSString(key) forIdentifier:LLCreateNSString(value)];
     }
-    
+
     void _setLocation(double latitude, double longitude)
     {
         [Localytics setLocation:CLLocationCoordinate2DMake(latitude, longitude)];
     }
-    
+
     void _setStringOption(const char* key, const char* value)
     {
         [Localytics setOptions:@{LLCreateNSString(key): LLCreateNSString(value)}];
     }
-    
+
     void _setBoolOption(const char* key, bool value)
     {
         [Localytics setOptions:@{LLCreateNSString(key): [NSNumber numberWithBool:value]}];
     }
-    
+
     void _setLongOption(const char* key, long value)
     {
         [Localytics setOptions:@{LLCreateNSString(key): [NSNumber numberWithLong:value]}];

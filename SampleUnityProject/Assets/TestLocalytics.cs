@@ -97,8 +97,31 @@ public class TestLocalytics : MonoBehaviour
 			Dictionary<string, string> attributes = new Dictionary<string, string>();
 			attributes.Add("attr", "value");
 			Localytics.TagEvent("test", attributes);
+			CustomerInfo customer = new CustomerInfo();
+			customer.CustomerId = "1vl83nshl";
+			customer.FirstName = "John";
+			customer.LastName = "Doe";
+			customer.FullName = "John Michael Doe";
+			customer.EmailAddress = "john@doe.com";
+			Localytics.TagCustomerRegistered(customer, "native", attributes); // events to follow have John Doe customer ID
+			Localytics.TagPurchased("phone", "2jk87bv", "electronics", 500, attributes);
+			Localytics.TagAddedToCart("phone", "2jk87bv", "electronics", 500, attributes);
+			Localytics.TagStartedCheckout(600, 2, attributes);
+			Localytics.TagCustomerLoggedOut(attributes); // events to following back to anonymous customer ID
+			Localytics.TagCompletedCheckout(700, 3, attributes);
+			Localytics.TagContentViewed("product review", "91lkjlad5", "video", attributes);
+			Localytics.TagSearched("best phone", "electronics", 125, attributes);
+			customer = new CustomerInfo();
+			customer.CustomerId = "96dba36ak";
+			customer.FirstName = "Jane";
+			customer.LastName = "Doe";
+			customer.FullName = "Jane Sarah Doe";
+			customer.EmailAddress = "jane@doe.com";
+			Localytics.TagCustomerLoggedIn(customer, "facebook", attributes); // events to follow have Jane Doe customer ID
+			Localytics.TagShared("9 awesome things", "91hha3zx", "article", "twitter", attributes);
+			Localytics.TagContentRated("delicious apps", "10fk38vh", "food", 4, attributes);
+			Localytics.TagInvited("sms", attributes);
 			Localytics.Upload();
-
 		});
         _tagScreen1.onClick.AddListener(() => {
 			Localytics.TagScreen("screen1");

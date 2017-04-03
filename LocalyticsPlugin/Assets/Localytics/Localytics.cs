@@ -500,11 +500,17 @@ namespace LocalyticsUnity {
 				LocalyticsClass.CallStatic("tagStartedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
 				#elif UNITY_IOS
 				string values = "";
-				if (attributes != null)
+				Dictionary<string, string> copy = null;
+				if (attributes == null)
 				{
-					values = MiniJSON.jsonEncode(attributes);
+					copy = new Dictionary<string, string>();
+				} else {
+					copy = new Dictionary<string, string>(attributes);
 				}
-				_tagStartedCheckout(totalPrice, itemCount, values);
+				copy.Add("ll_total_price", totalPrice+"");
+				copy.Add("ll_item_count", itemCount+"");
+				values = MiniJSON.jsonEncode(copy);
+				_tagStartedCheckout(values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -516,11 +522,17 @@ namespace LocalyticsUnity {
 				LocalyticsClass.CallStatic("tagCompletedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
 				#elif UNITY_IOS
 				string values = "";
-				if (attributes != null)
+				Dictionary<string, string> copy = null;
+				if (attributes == null)
 				{
-					values = MiniJSON.jsonEncode(attributes);
+					copy = new Dictionary<string, string>();
+				} else {
+					copy = new Dictionary<string, string>(attributes);
 				}
-				_tagCompletedCheckout(totalPrice, itemCount, values);
+				copy.Add("ll_total_price", totalPrice+"");
+				copy.Add("ll_item_count", itemCount+"");
+				values = MiniJSON.jsonEncode(copy);
+				_tagCompletedCheckout(values);
 				#else
 				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
 				#endif
@@ -2017,8 +2029,8 @@ namespace LocalyticsUnity {
 		[DllImport("__Internal")] private static extern void _tagEvent(string eventName, string attributes, long customerValueIncrease);
 		[DllImport("__Internal")] private static extern void _tagPurchased(string itemName, string itemId, string itemType, long itemPrice, string attributes);
 		[DllImport("__Internal")] private static extern void _tagAddedToCart(string itemName, string itemId, string itemType, long itemPrice, string attributes);
-		[DllImport("__Internal")] private static extern void _tagStartedCheckout(long totalPrice, long itemCount, string attributes);
-		[DllImport("__Internal")] private static extern void _tagCompletedCheckout(long totalPrice, long itemCount, string attributes);
+		[DllImport("__Internal")] private static extern void _tagStartedCheckout(string attributes);
+		[DllImport("__Internal")] private static extern void _tagCompletedCheckout(string attributes);
 		[DllImport("__Internal")] private static extern void _tagContentViewed(string contentName, string contentId, string contentType, string attributes);
 		[DllImport("__Internal")] private static extern void _tagSearched(string queryText, string contentType, long resultCount, string attributes);
 		[DllImport("__Internal")] private static extern void _tagShared(string contentName, string contentId, string contentType, string methodName, string attributes);
