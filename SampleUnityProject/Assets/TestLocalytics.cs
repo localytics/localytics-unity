@@ -8,8 +8,6 @@ using LocalyticsUnity;
 public class TestLocalytics : MonoBehaviour
 {
     [SerializeField]
-    private Text _analyticsHost;
-    [SerializeField]
     private Text _appKey;
     [SerializeField]
     private Text _installId;
@@ -18,19 +16,11 @@ public class TestLocalytics : MonoBehaviour
     [SerializeField]
     private Text _loggingEnabled;
     [SerializeField]
-	private Text _messagingHost;
-	[SerializeField]
-	private Text _inAppIdAdEnabled;
-    [SerializeField]
     private Text _optedOut;
-    [SerializeField]
-    private Text _profilesHost;
     [SerializeField]
     private Text _pushDisabled;
     [SerializeField]
     private Text _testModeEnabled;
-    [SerializeField]
-    private Text _sessionTimeoutInterval;
     [SerializeField]
     private Text _pushRegistrationId;
     [SerializeField]
@@ -43,6 +33,10 @@ public class TestLocalytics : MonoBehaviour
     private Button _tagScreen1;
     [SerializeField]
     private Button _tagScreen2;
+	[SerializeField]
+	private Button _enableTestMode;
+	[SerializeField]
+	private Button _testPlaces;
 
     // Use this for initialization
     void Start()
@@ -133,10 +127,37 @@ public class TestLocalytics : MonoBehaviour
 			Localytics.Upload();
 		});
 
+		_enableTestMode.onClick.AddListener (() => {
+			Localytics.TestModeEnabled = true;
+			UpdateLabels();
+		});
+
+		_testPlaces.onClick.AddListener (() => {
+			List<CircularRegionInfo> toMonitor = Localytics.GetGeofencesToMonitor(42.34952, -71.05017);
+			Debug.Log("Geofences to monitor:");
+			foreach (CircularRegionInfo info in toMonitor)
+			{
+				printCircularRegion(info);
+			}
+
+			CircularRegionInfo regionInfo = new CircularRegionInfo();
+			regionInfo.UniqueId = "2nla29ahd"; // only the unique ID is required when manually triggering
+			List<CircularRegionInfo> toTrigger = new List<CircularRegionInfo>();
+			toTrigger.Add(regionInfo);
+			Localytics.TriggerRegions(toTrigger, Localytics.RegionEvent.Enter);
+
+			// For iOS, complete PLIST, notification registration, and UserNotification (if relevant) steps before
+			// enabling location monitoring. For Android, complete AnddroidManifest.xml additions and add runtime permission
+			// ask before enabling location monitoring.
+			// See http://docs.localytics.com/dev/ios.html#places-ios and http://docs.localytics.com/dev/android.html#places-android
+			//Localytics.LocationMonitoringEnabled = true;
+		});
+
         Localytics.CustomerId = "user1";
+		Debug.Log ("customer ID: " + Localytics.CustomerId);
 
 		Localytics.SetIdentifier("test_identifier", "test setIdentifier");
-		Localytics.GetIdentifier("test_identifier");
+		Debug.Log ("identifier: " + Localytics.GetIdentifier("test_identifier"));
 
 		Localytics.InAppMessageDismissButtonLocationEnum = Localytics.InAppMessageDismissButtonLocation.Right;
 
@@ -169,7 +190,7 @@ public class TestLocalytics : MonoBehaviour
 		Localytics.SetCustomerFullName("Convenient Full Name");
 
 		Localytics.SetCustomDimension(1,"testCD1");
-		Localytics.GetCustomDimension(1);
+		Debug.Log ("test CD: " + Localytics.GetCustomDimension(1));
 
         Localytics.Upload();
 
@@ -181,14 +202,15 @@ public class TestLocalytics : MonoBehaviour
 
     void UpdateLabels()
     {
-		_appKey.text = "AppKey: " + Localytics.AppKey;
-		_installId.text = "Install Id:" + Localytics.InstallId;
+		_appKey.text = "App Key: " + Localytics.AppKey;
+		_installId.text = "Install Id: " + Localytics.InstallId;
 		_libraryVersion.text = "Library Version: " + Localytics.LibraryVersion;
 		_loggingEnabled.text = "Logging Enabled: " + Localytics.LoggingEnabled;
 		_optedOut.text = "Opted Out: " + Localytics.OptedOut;		
 		_testModeEnabled.text = "Test Mode Enabled: " + Localytics.TestModeEnabled;
 
 #if UNITY_IOS
+		_pushDisabled.text = "In-App Ad Id Parameter Enabled: " + Localytics.InAppAdIdParameterEnabled;
         _pushRegistrationId.text = "Push Token: " + Localytics.PushToken;
 #elif UNITY_ANDROID
 		_pushDisabled.text = "Push Disabled: " + Localytics.NotificationsDisabled;
