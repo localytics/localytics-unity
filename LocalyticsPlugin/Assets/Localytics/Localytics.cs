@@ -8,7 +8,8 @@ using AOT;
 using System.Collections;
 
 
-namespace LocalyticsUnity {
+namespace LocalyticsUnity
+{
 
 	public class CustomerInfo
 	{
@@ -78,28 +79,28 @@ namespace LocalyticsUnity {
 			}
 		}
 
-		public Dictionary<string, string> ToDictionary()
+		public Dictionary<string, string> ToDictionary ()
 		{
-			Dictionary<string, string> dict = new Dictionary<string, string>();
+			Dictionary<string, string> dict = new Dictionary<string, string> ();
 			if (customerId != null)
 			{
-				dict.Add("customer_id", customerId);
+				dict.Add ("customer_id", customerId);
 			}
 			if (firstName != null)
 			{
-				dict.Add("first_name", firstName);
+				dict.Add ("first_name", firstName);
 			}
 			if (lastName != null)
 			{
-				dict.Add("last_name", lastName);
+				dict.Add ("last_name", lastName);
 			}
 			if (fullName != null)
 			{
-				dict.Add("full_name", fullName);
+				dict.Add ("full_name", fullName);
 			}
 			if (emailAddress != null)
 			{
-				dict.Add("email_address", emailAddress);
+				dict.Add ("email_address", emailAddress);
 			}
 			return dict;
 		}
@@ -339,1038 +340,754 @@ namespace LocalyticsUnity {
 
 	public class Localytics
 	{
-			// Analytics
-	    public delegate void LocalyticsDidTagEvent(string eventName, Dictionary<string, string> attributes, long customerValueIncrease);
-	    public delegate void LocalyticsSessionDidOpen(bool isFirst, bool isUpgrade, bool isResume);
-	    public delegate void LocalyticsSessionWillClose();
-	    public delegate void LocalyticsSessionWillOpen(bool isFirst, bool isUpgrade, bool isResume);
+		// Analytics
+		public delegate void LocalyticsDidTagEvent (string eventName, Dictionary<string, string> attributes, long customerValueIncrease);
+		public delegate void LocalyticsSessionDidOpen (bool isFirst, bool isUpgrade, bool isResume);
+		public delegate void LocalyticsSessionWillClose ();
+		public delegate void LocalyticsSessionWillOpen (bool isFirst, bool isUpgrade, bool isResume);
 
-			// Analytics
-	    public static event LocalyticsDidTagEvent OnLocalyticsDidTagEvent;
-	    public static event LocalyticsSessionDidOpen OnLocalyticsSessionDidOpen;
-	    public static event LocalyticsSessionWillClose OnLocalyticsSessionWillClose;
-	    public static event LocalyticsSessionWillOpen OnLocalyticsSessionWillOpen;
+		public static event LocalyticsDidTagEvent OnLocalyticsDidTagEvent;
+		public static event LocalyticsSessionDidOpen OnLocalyticsSessionDidOpen;
+		public static event LocalyticsSessionWillClose OnLocalyticsSessionWillClose;
+		public static event LocalyticsSessionWillOpen OnLocalyticsSessionWillOpen;
 
-			// Messaging
-	    public delegate void LocalyticsDidDismissInAppMessage();
-	    public delegate void LocalyticsDidDisplayInAppMessage();
-	    public delegate void LocalyticsWillDismissInAppMessage();
-	    public delegate void LocalyticsWillDisplayInAppMessage();
+		// Messaging
+		public delegate void LocalyticsDidDismissInAppMessage ();
+		public delegate void LocalyticsDidDisplayInAppMessage ();
+		public delegate void LocalyticsWillDismissInAppMessage ();
+		public delegate void LocalyticsWillDisplayInAppMessage ();
 
-	    public static event LocalyticsDidDismissInAppMessage OnLocalyticsDidDismissInAppMessage;
-	    public static event LocalyticsDidDisplayInAppMessage OnLocalyticsDidDisplayInAppMessage;
-	    public static event LocalyticsWillDismissInAppMessage OnLocalyticsWillDismissInAppMessage;
-	    public static event LocalyticsWillDisplayInAppMessage OnLocalyticsWillDisplayInAppMessage;
+		public static event LocalyticsDidDismissInAppMessage OnLocalyticsDidDismissInAppMessage;
+		public static event LocalyticsDidDisplayInAppMessage OnLocalyticsDidDisplayInAppMessage;
+		public static event LocalyticsWillDismissInAppMessage OnLocalyticsWillDismissInAppMessage;
+		public static event LocalyticsWillDisplayInAppMessage OnLocalyticsWillDisplayInAppMessage;
 
 #if UNITY_ANDROID
-	    public delegate bool LocalyticsShouldShowPushNotification(PushCampaignInfo campaign);
-			public delegate bool LocalyticsShouldShowPlacesPushNotification(PlacesCampaignInfo campaign);
-			public delegate AndroidJavaObject LocalyticsWillShowPlacesPushNotification(AndroidJavaObject notificationBuilder, PlacesCampaignInfo campaign);
-			public delegate AndroidJavaObject LocalyticsWillShowPushNotification(AndroidJavaObject notificationBuilder, PushCampaignInfo campaign);
+		public delegate bool LocalyticsShouldShowPushNotification(PushCampaignInfo campaign);
+		public delegate bool LocalyticsShouldShowPlacesPushNotification(PlacesCampaignInfo campaign);
+		public delegate AndroidJavaObject LocalyticsWillShowPlacesPushNotification(AndroidJavaObject notificationBuilder, PlacesCampaignInfo campaign);
+		public delegate AndroidJavaObject LocalyticsWillShowPushNotification(AndroidJavaObject notificationBuilder, PushCampaignInfo campaign);
 
-			public static event LocalyticsShouldShowPushNotification OnLocalyticsShouldShowPushNotification;
-			public static event LocalyticsShouldShowPlacesPushNotification OnLocalyticsShouldShowPlacesPushNotification;
-			public static event LocalyticsWillShowPlacesPushNotification OnLocalyticsWillShowPlacesPushNotification;
-			public static event LocalyticsWillShowPushNotification OnLocalyticsWillShowPushNotification;
+		public static event LocalyticsShouldShowPushNotification OnLocalyticsShouldShowPushNotification;
+		public static event LocalyticsShouldShowPlacesPushNotification OnLocalyticsShouldShowPlacesPushNotification;
+		public static event LocalyticsWillShowPlacesPushNotification OnLocalyticsWillShowPlacesPushNotification;
+		public static event LocalyticsWillShowPushNotification OnLocalyticsWillShowPushNotification;
 #endif
 
-			// Location
-			public delegate void LocalyticsDidTriggerRegions(List<CircularRegionInfo> regions, RegionEvent regionEvent);
-			public delegate void LocalyticsDidUpdateMonitoredGeofences(List<CircularRegionInfo> added, List<CircularRegionInfo> removed);
+		// Location
+		public delegate void LocalyticsDidTriggerRegions (List<CircularRegionInfo> regions, RegionEvent regionEvent);
+		public delegate void LocalyticsDidUpdateMonitoredGeofences (List<CircularRegionInfo> added, List<CircularRegionInfo> removed);
 #if UNITY_ANDROID
-			public delegate void LocalyticsDidUpdateLocation(AndroidJavaObject location);
+		public delegate void LocalyticsDidUpdateLocation(AndroidJavaObject location);
 #else
-			public delegate void LocalyticsDidUpdateLocation(Dictionary<string, object> locationDict);
+		public delegate void LocalyticsDidUpdateLocation (Dictionary<string, object> locationDict);
 #endif
 
-			public static event LocalyticsDidUpdateLocation OnLocalyticsDidUpdateLocation;
-			public static event LocalyticsDidTriggerRegions OnLocalyticsDidTriggerRegions;
-			public static event LocalyticsDidUpdateMonitoredGeofences OnLocalyticsDidUpdateMonitoredGeofences;
+		public static event LocalyticsDidUpdateLocation OnLocalyticsDidUpdateLocation;
+		public static event LocalyticsDidTriggerRegions OnLocalyticsDidTriggerRegions;
+		public static event LocalyticsDidUpdateMonitoredGeofences OnLocalyticsDidUpdateMonitoredGeofences;
 
-	    public enum ProfileScope
-	    {
-	        Application,
-	        Organization,
-	    }
+		public enum ProfileScope
+		{
+			Application,
+			Organization,
+		}
 
-	    public enum InAppMessageDismissButtonLocation
-	    {
-	        Left,
-	        Right,
-	    }
+		public enum InAppMessageDismissButtonLocation
+		{
+			Left,
+			Right,
+		}
 
-			public enum RegionEvent
+		public enum RegionEvent
+		{
+			Enter,
+			Exit
+		}
+
+		// #################################################
+		// Integration
+		// #################################################
+
+		public static void Upload ()
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("upload");
+			#elif UNITY_IOS
+			_upload();
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		// #################################################
+		// Analytics
+		// #################################################
+
+		public static void OpenSession ()
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("openSession");
+			#elif UNITY_IOS
+			_openSession();
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void CloseSession ()
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("closeSession");
+			#elif UNITY_IOS
+			_closeSession ();
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagEvent (string eventName, Dictionary<string, string> attributes = null, long customerValueIncrease = 0)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagEvent", eventName, DictionaryToMap(attributes), customerValueIncrease);
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
 			{
-				Enter,
-				Exit
+				values = MiniJSON.jsonEncode (attributes);
 			}
+			_tagEvent(eventName, values, customerValueIncrease);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
 
-			// #################################################
-			// Integration
-			// #################################################
+		public static void TagPurchased (string itemName, string itemId, string itemType, long itemPrice, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagPurchased", itemName, itemId, itemType, new AndroidJavaObject("java/lang/Long", itemPrice), DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagPurchased(itemName, itemId, itemType, itemPrice, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
 
-			public static void Upload()
+		public static void TagAddedToCart (string itemName, string itemId, string itemType, long itemPrice, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagAddedToCart", itemName, itemId, itemType, new AndroidJavaObject("java/lang/Long", itemPrice), DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagAddedToCart(itemName, itemId, itemType, itemPrice, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagStartedCheckout (long totalPrice, long itemCount, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagStartedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			Dictionary<string, string> copy = null;
+			if (attributes == null)
+			{
+				copy = new Dictionary<string, string>();
+			}
+			else
+			{
+				copy = new Dictionary<string, string>(attributes);
+			}
+			copy.Add("ll_total_price", totalPrice+"");
+			copy.Add("ll_item_count", itemCount+"");
+			values = MiniJSON.jsonEncode(copy);
+			_tagStartedCheckout(values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagCompletedCheckout (long totalPrice, long itemCount, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagCompletedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			Dictionary<string, string> copy = null;
+			if (attributes == null)
+			{
+				copy = new Dictionary<string, string>();
+			}
+			else
+			{
+				copy = new Dictionary<string, string>(attributes);
+			}
+			copy.Add("ll_total_price", totalPrice+"");
+			copy.Add("ll_item_count", itemCount+"");
+			values = MiniJSON.jsonEncode(copy);
+			_tagCompletedCheckout(values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagContentViewed (string contentName, string contentId, string contentType, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagContentViewed", contentName, contentId, contentType, DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagContentViewed(contentName, contentId, contentType, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagSearched (string queryText, string contentType, long resultCount, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagSearched", queryText, contentType, new AndroidJavaObject("java/lang/Long", resultCount), DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagSearched(queryText, contentType, resultCount, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagShared (string contentName, string contentId, string contentType, string methodName, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagShared", contentName, contentId, contentType, methodName, DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagShared(contentName, contentId, contentType, methodName, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagContentRated (string contentName, string contentId, string contentType, long rating, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagContentRated", contentName, contentId, contentType, new AndroidJavaObject("java/lang/Long", rating), DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagContentRated(contentName, contentId, contentType, rating, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagCustomerRegistered (CustomerInfo customer, string methodName, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagCustomerRegistered", ConvertCustomerInfo(customer), methodName, DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string customerValues = "";
+			if (customer != null)
+			{
+				customerValues = MiniJSON.jsonEncode(customer.ToDictionary());
+			}
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagCustomerRegistered(customerValues, methodName, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagCustomerLoggedIn (CustomerInfo customer, string methodName, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagCustomerLoggedIn", ConvertCustomerInfo(customer), methodName, DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string customerValues = "";
+			if (customer != null)
+			{
+				customerValues = MiniJSON.jsonEncode(customer.ToDictionary());
+			}
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagCustomerLoggedIn(customerValues, methodName, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagCustomerLoggedOut (Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagCustomerLoggedOut", DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagCustomerLoggedOut(values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagInvited (string methodName, Dictionary<string, string> attributes)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagInvited", methodName, DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode(attributes);
+			}
+			_tagInvited(methodName, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TagScreen (string screen)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("tagScreen", screen);
+			#elif UNITY_IOS
+			_tagScreen(screen);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static string GetCustomDimension (int dimension)
+		{
+			#if UNITY_ANDROID
+			return LocalyticsClass.CallStatic<string>("getCustomDimension", dimension);
+			#elif UNITY_IOS
+			return _getCustomDimension (dimension);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetCustomDimension (int dimension, string value)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setCustomDimension", dimension, value);
+			#elif UNITY_IOS
+			_setCustomDimension (dimension, value);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static bool OptedOut
+		{
+			get
 			{
 				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("upload");
+				return LocalyticsClass.CallStatic<bool>("isOptedOut");
 				#elif UNITY_IOS
-				_upload();
+				return _isOptedOut();
 				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
 				#endif
 			}
-
-			// #################################################
-			// Analytics
-			// #################################################
-
-			public static void OpenSession()
+			set
 			{
 				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("openSession");
+				LocalyticsClass.CallStatic("setOptedOut", value);
 				#elif UNITY_IOS
-				_openSession();
+				_setOptedOut(value);
 				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
 				#endif
 			}
+		}
 
-			public static void CloseSession()
+		public static void RegisterForAnalyticsEvents ()
+		{
+			#if UNITY_ANDROID
+			if (_analyticsListener == null)
 			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("closeSession");
-				#elif UNITY_IOS
-				_closeSession ();
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
+				_analyticsListener = new AnalyticsListener();
 			}
 
-			public static void TagEvent(string eventName, Dictionary<string, string> attributes = null, long customerValueIncrease = 0)
+			LocalyticsClass.CallStatic("setAnalyticsListener", _analyticsListener);
+			#elif UNITY_IOS
+			_registerReceiveAnalyticsCallback (ReceiveAnalyticsMessage);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void UnregisterForAnalyticsEvents ()
+		{
+			#if UNITY_ANDROID
+			if (_analyticsListener == null)
+			{
+				return;
+			}
+
+			LocalyticsClass.CallStatic("setAnalyticsListener", null);
+			#elif UNITY_IOS
+			_removeAnalyticsCallback ();
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		// #################################################
+		// Profiles
+		// #################################################
+
+		public static void SetProfileAttribute (string attributeName, long attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			_setProfileAttributeLong (attributeName, attributeValue, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetProfileAttribute (string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			string values = MiniJSON.jsonEncode (attributeValue);
+			_setProfileAttributeLongArray (attributeName, values, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetProfileAttribute (string attributeName, string attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			_setProfileAttributeString (attributeName, attributeValue, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetProfileAttribute (string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			string values = MiniJSON.jsonEncode (attributeValue);
+			_setProfileAttributeStringArray (attributeName, values, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void DeleteProfileAttribute (string attributeName, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("deleteProfileAttribute", attributeName, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			_deleteProfileAttribute (attributeName, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void AddProfileAttributesToSet (string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("addProfileAttributesToSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributeValue != null)
+			{
+				values = MiniJSON.jsonEncode (attributeValue);
+			}
+			_addProfileAttributesToSet (attributeName, values, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void AddProfileAttributesToSet (string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("addProfileAttributesToSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributeValue != null)
+			{
+				values = MiniJSON.jsonEncode (attributeValue);
+			}
+			_addProfileAttributesToSet (attributeName, values, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void RemoveProfileAttributesFromSet (string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("removeProfileAttributesFromSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributeValue != null)
+			{
+				values = MiniJSON.jsonEncode (attributeValue);
+			}
+			_removeProfileAttributesFromSet (attributeName, values, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void RemoveProfileAttributesFromSet (string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("removeProfileAttributesFromSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributeValue != null)
+			{
+				values = MiniJSON.jsonEncode (attributeValue);
+			}
+			_removeProfileAttributesFromSet (attributeName, values, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void IncrementProfileAttribute (string attributeName, long attributeValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("incrementProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			_incrementProfileAttribute (attributeName, attributeValue, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void DecrementProfileAttribute (string attributeName, long decrementValue, ProfileScope scope = ProfileScope.Application)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("decrementProfileAttribute", attributeName, decrementValue, GetProfileScopeEnum(scope));
+			#elif UNITY_IOS
+			_decrementProfileAttribute (attributeName, decrementValue, (int)scope);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetCustomerEmail (string email)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setCustomerEmail", email);
+			#elif UNITY_IOS
+			_setCustomerEmail(email);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetCustomerFirstName (string firstName)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setCustomerFirstName", firstName);
+			#elif UNITY_IOS
+			_setCustomerFirstName(firstName);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetCustomerLastName (string lastName)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setCustomerLastName", lastName);
+			#elif UNITY_IOS
+			_setCustomerLastName(lastName);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetCustomerFullName (string fullName)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setCustomerFullName", fullName);
+			#elif UNITY_IOS
+			_setCustomerFullName(fullName);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		// #################################################
+		// Marketing
+		// #################################################
+
+		public static void TriggerInAppMessage (string triggerName, Dictionary<string, string> attributes = null)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("triggerInAppMessage", triggerName, DictionaryToMap(attributes));
+			#elif UNITY_IOS
+			string values = "";
+			if (attributes != null)
+			{
+				values = MiniJSON.jsonEncode (attributes);
+			}
+			_triggerInAppMessage (triggerName, values);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void DismissCurrentInAppMessage ()
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("dismissCurrentInAppMessage");
+			#elif UNITY_IOS
+			_dismissCurrentInAppMessage ();
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static InAppMessageDismissButtonLocation InAppMessageDismissButtonLocationEnum
+		{
+			get
 			{
 				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagEvent", eventName, DictionaryToMap(attributes), customerValueIncrease);
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
+				string name = LocalyticsClass.CallStatic<AndroidJavaObject>("getInAppMessageDismissButtonLocation").Call<string>("name");
+				switch (name)
 				{
-					values = MiniJSON.jsonEncode (attributes);
-				}
-				_tagEvent(eventName, values, customerValueIncrease);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void TagPurchased(string itemName, string itemId, string itemType, long itemPrice, Dictionary<string, string> attributes)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagPurchased", itemName, itemId, itemType, new AndroidJavaObject("java/lang/Long", itemPrice), DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagPurchased(itemName, itemId, itemType, itemPrice, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void TagAddedToCart(string itemName, string itemId, string itemType, long itemPrice, Dictionary<string, string> attributes)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagAddedToCart", itemName, itemId, itemType, new AndroidJavaObject("java/lang/Long", itemPrice), DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagAddedToCart(itemName, itemId, itemType, itemPrice, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void TagStartedCheckout(long totalPrice, long itemCount, Dictionary<string, string> attributes)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagStartedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				Dictionary<string, string> copy = null;
-				if (attributes == null)
-				{
-					copy = new Dictionary<string, string>();
-				} else {
-					copy = new Dictionary<string, string>(attributes);
-				}
-				copy.Add("ll_total_price", totalPrice+"");
-				copy.Add("ll_item_count", itemCount+"");
-				values = MiniJSON.jsonEncode(copy);
-				_tagStartedCheckout(values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-	    public static void TagCompletedCheckout(long totalPrice, long itemCount, Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagCompletedCheckout", new AndroidJavaObject("java/lang/Long", totalPrice), new AndroidJavaObject("java/lang/Long", itemCount), DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				Dictionary<string, string> copy = null;
-				if (attributes == null)
-				{
-					copy = new Dictionary<string, string>();
-				} else {
-					copy = new Dictionary<string, string>(attributes);
-				}
-				copy.Add("ll_total_price", totalPrice+"");
-				copy.Add("ll_item_count", itemCount+"");
-				values = MiniJSON.jsonEncode(copy);
-				_tagCompletedCheckout(values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagContentViewed(string contentName, string contentId, string contentType, Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagContentViewed", contentName, contentId, contentType, DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagContentViewed(contentName, contentId, contentType, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagSearched(string queryText, string contentType, long resultCount, Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagSearched", queryText, contentType, new AndroidJavaObject("java/lang/Long", resultCount), DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagSearched(queryText, contentType, resultCount, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagShared(string contentName, string contentId, string contentType, string methodName, Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagShared", contentName, contentId, contentType, methodName, DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagShared(contentName, contentId, contentType, methodName, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagContentRated(string contentName, string contentId, string contentType, long rating, Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagContentRated", contentName, contentId, contentType, new AndroidJavaObject("java/lang/Long", rating), DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagContentRated(contentName, contentId, contentType, rating, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagCustomerRegistered(CustomerInfo customer, string methodName, Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagCustomerRegistered", ConvertCustomerInfo(customer), methodName, DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string customerValues = "";
-				if (customer != null)
-				{
-					customerValues = MiniJSON.jsonEncode(customer.ToDictionary());
-				}
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagCustomerRegistered(customerValues, methodName, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagCustomerLoggedIn(CustomerInfo customer, string methodName, Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagCustomerLoggedIn", ConvertCustomerInfo(customer), methodName, DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string customerValues = "";
-				if (customer != null)
-				{
-					customerValues = MiniJSON.jsonEncode(customer.ToDictionary());
-				}
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagCustomerLoggedIn(customerValues, methodName, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagCustomerLoggedOut(Dictionary<string, string> attributes)
-	    {
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagCustomerLoggedOut", DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagCustomerLoggedOut(values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-	    }
-
-	    public static void TagInvited(string methodName, Dictionary<string, string> attributes)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagInvited", methodName, DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode(attributes);
-				}
-				_tagInvited(methodName, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void TagScreen(string screen)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("tagScreen", screen);
-				#elif UNITY_IOS
-				_tagScreen(screen);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static string GetCustomDimension(int dimension)
-			{
-				#if UNITY_ANDROID
-				return LocalyticsClass.CallStatic<string>("getCustomDimension", dimension);
-				#elif UNITY_IOS
-				return _getCustomDimension (dimension);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetCustomDimension(int dimension, string value)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setCustomDimension", dimension, value);
-				#elif UNITY_IOS
-				_setCustomDimension (dimension, value);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static bool OptedOut
-			{
-				get
-				{
-					#if UNITY_ANDROID
-					return LocalyticsClass.CallStatic<bool>("isOptedOut");
-					#elif UNITY_IOS
-					return _isOptedOut();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-				set
-				{
-					#if UNITY_ANDROID
-					LocalyticsClass.CallStatic("setOptedOut", value);
-					#elif UNITY_IOS
-					_setOptedOut(value);
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-			}
-
-			public static void RegisterForAnalyticsEvents()
-			{
-				#if UNITY_ANDROID
-				if (_analyticsListener == null)
-				{
-					_analyticsListener = new AnalyticsListener();
-				}
-
-				LocalyticsClass.CallStatic("setAnalyticsListener", _analyticsListener);
-				#elif UNITY_IOS
-				_registerReceiveAnalyticsCallback (ReceiveAnalyticsMessage);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void UnregisterForAnalyticsEvents()
-			{
-				#if UNITY_ANDROID
-				if (_analyticsListener == null)
-				{
-					return;
-				}
-
-				LocalyticsClass.CallStatic("setAnalyticsListener", null);
-				#elif UNITY_IOS
-				_removeAnalyticsCallback ();
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			// #################################################
-			// Profiles
-			// #################################################
-
-			public static void SetProfileAttribute(string attributeName, long attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				_setProfileAttributeLong (attributeName, attributeValue, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetProfileAttribute(string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				string values = MiniJSON.jsonEncode (attributeValue);
-				_setProfileAttributeLongArray (attributeName, values, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetProfileAttribute(string attributeName, string attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				_setProfileAttributeString (attributeName, attributeValue, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetProfileAttribute(string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				string values = MiniJSON.jsonEncode (attributeValue);
-				_setProfileAttributeStringArray (attributeName, values, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void DeleteProfileAttribute(string attributeName, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("deleteProfileAttribute", attributeName, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				_deleteProfileAttribute (attributeName, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void AddProfileAttributesToSet(string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("addProfileAttributesToSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributeValue != null)
-				{
-					values = MiniJSON.jsonEncode (attributeValue);
-				}
-				_addProfileAttributesToSet (attributeName, values, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void AddProfileAttributesToSet(string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("addProfileAttributesToSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributeValue != null)
-				{
-					values = MiniJSON.jsonEncode (attributeValue);
-				}
-				_addProfileAttributesToSet (attributeName, values, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void RemoveProfileAttributesFromSet(string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("removeProfileAttributesFromSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributeValue != null)
-				{
-					values = MiniJSON.jsonEncode (attributeValue);
-				}
-				_removeProfileAttributesFromSet (attributeName, values, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void RemoveProfileAttributesFromSet(string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("removeProfileAttributesFromSet", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributeValue != null)
-				{
-					values = MiniJSON.jsonEncode (attributeValue);
-				}
-				_removeProfileAttributesFromSet (attributeName, values, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void IncrementProfileAttribute(string attributeName, long attributeValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("incrementProfileAttribute", attributeName, attributeValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				_incrementProfileAttribute (attributeName, attributeValue, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void DecrementProfileAttribute(string attributeName, long decrementValue, ProfileScope scope = ProfileScope.Application)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("decrementProfileAttribute", attributeName, decrementValue, GetProfileScopeEnum(scope));
-				#elif UNITY_IOS
-				_decrementProfileAttribute (attributeName, decrementValue, (int)scope);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetCustomerEmail(string email)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setCustomerEmail", email);
-				#elif UNITY_IOS
-				_setCustomerEmail(email);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetCustomerFirstName(string firstName)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setCustomerFirstName", firstName);
-				#elif UNITY_IOS
-				_setCustomerFirstName(firstName);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetCustomerLastName(string lastName)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setCustomerLastName", lastName);
-				#elif UNITY_IOS
-				_setCustomerLastName(lastName);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetCustomerFullName(string fullName)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setCustomerFullName", fullName);
-				#elif UNITY_IOS
-				_setCustomerFullName(fullName);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			// #################################################
-			// Marketing
-			// #################################################
-
-			public static void TriggerInAppMessage(string triggerName, Dictionary<string, string> attributes = null)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("triggerInAppMessage", triggerName, DictionaryToMap(attributes));
-				#elif UNITY_IOS
-				string values = "";
-				if (attributes != null)
-				{
-					values = MiniJSON.jsonEncode (attributes);
-				}
-				_triggerInAppMessage (triggerName, values);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void DismissCurrentInAppMessage()
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("dismissCurrentInAppMessage");
-				#elif UNITY_IOS
-				_dismissCurrentInAppMessage ();
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static InAppMessageDismissButtonLocation InAppMessageDismissButtonLocationEnum
-			{
-				get
-				{
-					#if UNITY_ANDROID
-					string name = LocalyticsClass.CallStatic<AndroidJavaObject>("getInAppMessageDismissButtonLocation").Call<string>("name");
-					switch (name)
-					{
 					default:
 					case "LEFT":
 						return InAppMessageDismissButtonLocation.Left;
 					case "RIGHT":
 						return InAppMessageDismissButtonLocation.Right;
-					}
-					#elif UNITY_IOS
-					return (InAppMessageDismissButtonLocation)_inAppMessageDismissButtonLocation();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
 				}
-				set
-				{
-					#if UNITY_ANDROID
-					LocalyticsClass.CallStatic("setInAppMessageDismissButtonLocation", GetInAppMessageDismissButtonLocationEnum(value));
-					#elif UNITY_IOS
-					_setInAppMessageDismissButtonLocation((uint)value);
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
+				#elif UNITY_IOS
+				return (InAppMessageDismissButtonLocation)_inAppMessageDismissButtonLocation();
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
 			}
-
-			public static bool TestModeEnabled
+			set
 			{
-				get
-				{
-					#if UNITY_ANDROID
-					return LocalyticsClass.CallStatic<bool>("isTestModeEnabled");
-					#elif UNITY_IOS
-					return _testModeEnabled();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-				set
-				{
-					#if UNITY_ANDROID
-					LocalyticsClass.CallStatic("setTestModeEnabled", value);
-					#elif UNITY_IOS
-					_setTestModeEnabled(value);
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
+				#if UNITY_ANDROID
+				LocalyticsClass.CallStatic("setInAppMessageDismissButtonLocation", GetInAppMessageDismissButtonLocationEnum(value));
+				#elif UNITY_IOS
+				_setInAppMessageDismissButtonLocation((uint)value);
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
 			}
+		}
+
+		public static bool TestModeEnabled
+		{
+			get
+			{
+				#if UNITY_ANDROID
+				return LocalyticsClass.CallStatic<bool>("isTestModeEnabled");
+				#elif UNITY_IOS
+				return _testModeEnabled();
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+			set
+			{
+				#if UNITY_ANDROID
+				LocalyticsClass.CallStatic("setTestModeEnabled", value);
+				#elif UNITY_IOS
+				_setTestModeEnabled(value);
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+		}
 
 #if UNITY_ANDROID
+		
+		public static void ClearInAppMessageDisplayActivity()
+		{
+			LocalyticsClass.CallStatic("clearInAppMessageDisplayActivity");
+		}
 
-			public static void ClearInAppMessageDisplayActivity()
-			{
-				LocalyticsClass.CallStatic("clearInAppMessageDisplayActivity");
-			}
+		public static void RegisterPush(string senderId)
+		{
+			LocalyticsClass.CallStatic("registerPush", senderId);
+		}
 
-			public static void RegisterPush(string senderId)
-			{
-				LocalyticsClass.CallStatic("registerPush", senderId);
-			}
+		public static void DisplayPushNotification(Dictionary<string, string> data)
+		{
+			LocalyticsClass.CallStatic("displayPushNotification", DictionaryToBundle(data));
+		}
 
-			public static void DisplayPushNotification(Dictionary<string, string> data)
+		public static string PushRegistrationId
+		{
+			get
 			{
-				LocalyticsClass.CallStatic("displayPushNotification", DictionaryToBundle(data));
+				return LocalyticsClass.CallStatic<string>("getPushRegistrationId");
 			}
+			set
+			{
+				LocalyticsClass.CallStatic("setPushRegistrationId", value);
+			}
+		}
 
-			public static string PushRegistrationId
+		public static bool NotificationsDisabled
+		{
+			get
 			{
-				get
-				{
-					return LocalyticsClass.CallStatic<string>("getPushRegistrationId");
-				}
-				set
-				{
-					LocalyticsClass.CallStatic("setPushRegistrationId", value);
-				}
+				return LocalyticsClass.CallStatic<bool>("areNotificationsDisabled");
 			}
-
-			public static bool NotificationsDisabled
+			set
 			{
-				get
-				{
-					return LocalyticsClass.CallStatic<bool>("areNotificationsDisabled");
-				}
-				set
-				{
-					LocalyticsClass.CallStatic("setNotificationsDisabled", value);
-				}
+				LocalyticsClass.CallStatic("setNotificationsDisabled", value);
 			}
+		}
 #endif
-
-			public static void RegisterForMessagingEvents()
-			{
-				#if UNITY_ANDROID
-				if (_messagingListener == null)
-				{
-					_messagingListener = new MessagingListener();
-				}
-
-				LocalyticsClass.CallStatic("setMessagingListener", _messagingListener);
-				#elif UNITY_IOS
-				_registerReceiveMessagingCallback (ReceiveMessagingMessage);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void UnregisterForMessagingEvents()
-			{
-				#if UNITY_ANDROID
-				if (_messagingListener == null)
-				{
-					return;
-				}
-
-				LocalyticsClass.CallStatic("setMessagingListener", null);
-				#elif UNITY_IOS
-				_removeMessagingCallback ();
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			// #################################################
-			// Location
-			// #################################################
-
-			public static bool LocationMonitoringEnabled
-			{
-#if UNITY_ANDROID
-				get
-				{
-					return LocalyticsClass.CallStatic<bool>("isLocationMonitoringEnabled");
-				}
-#endif
-				set
-				{
-					#if UNITY_ANDROID
-					LocalyticsClass.CallStatic("setLocationMonitoringEnabled", value);
-					#elif UNITY_IOS
-					_setLocationMonitoringEnabled(value);
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-			}
-
-			public static List<CircularRegionInfo> GetGeofencesToMonitor(double latitude, double longitude)
-			{
-				#if UNITY_ANDROID
-				AndroidJavaObject listObject = LocalyticsClass.CallStatic<AndroidJavaObject>("getGeofencesToMonitor", latitude, longitude);
-				return ConvertGeofencesList(listObject);
-				#elif UNITY_IOS
-				string json = _getGeofencesToMonitor(latitude, longitude);
-				return ConvertGeofencesListFromJson(json);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void TriggerRegions(List<CircularRegionInfo> regions, RegionEvent regionEvent)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("triggerRegions", ConvertRegionInfoList(regions), GetRegionEventEnum(regionEvent));
-				#elif UNITY_IOS
-				string values = "";
-				if (regions != null)
-				{
-					values = ConvertRegionInfoList(regions);
-				}
-				_triggerRegions(values, (int)regionEvent);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void RegisterForLocationEvents()
-			{
-				#if UNITY_ANDROID
-				if (_locationListener == null)
-				{
-					_locationListener = new LocationListener();
-				}
-
-				LocalyticsClass.CallStatic("setLocationListener", _locationListener);
-				#elif UNITY_IOS
-				_registerReceiveLocationCallback (ReceiveLocationMessage);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void UnregisterForLocationEvents()
-			{
-				#if UNITY_ANDROID
-				if (_locationListener == null)
-				{
-					return;
-				}
-
-				LocalyticsClass.CallStatic("setLocationListener", null);
-				#elif UNITY_IOS
-				_removeLocationCallback ();
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			// #################################################
-			// User Information
-			// #################################################
-
-			public static string CustomerId
-			{
-				get
-				{
-					#if UNITY_ANDROID
-					return LocalyticsClass.CallStatic<string>("getCustomerId");
-					#elif UNITY_IOS
-					return _customerId();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-				set
-				{
-					#if UNITY_ANDROID
-					LocalyticsClass.CallStatic("setCustomerId", value);
-					#elif UNITY_IOS
-					_setCustomerId(value);
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-			}
-
-			public static string GetIdentifier(string key)
-			{
-				#if UNITY_ANDROID
-				return LocalyticsClass.CallStatic<string>("getIdentifier", key);
-				#elif UNITY_IOS
-				return _getIdentifier (key);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetIdentifier(string key, string value)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setIdentifier", key, value);
-				#elif UNITY_IOS
-				_setIdentifier (key, value);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetLocation(LocationInfo location)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setLocation", LocationInfoToLocation(location));
-				#elif UNITY_IOS
-				_setLocation(location.latitude, location.longitude);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			// #################################################
-			// Developer Options
-			// #################################################
-
-			public static void SetOption(string key, string stringValue)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/String", stringValue));
-				#elif UNITY_IOS
-				_setStringOption(key, stringValue);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetOption(string key, long longValue)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/Long", longValue));
-				#elif UNITY_IOS
-				_setLongOption(key, longValue);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static void SetOption(string key, bool boolValue)
-			{
-				#if UNITY_ANDROID
-				LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/Boolean", boolValue));
-				#elif UNITY_IOS
-				_setBoolOption(key, boolValue);
-				#else
-				throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-				#endif
-			}
-
-			public static string AppKey
-			{
-				get
-				{
-					#if UNITY_ANDROID
-					return LocalyticsClass.CallStatic<string>("getAppKey");
-					#elif UNITY_IOS
-					return _appKey();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-			}
-
-			public static string InstallId
-			{
-				get
-				{
-					#if UNITY_ANDROID
-					return LocalyticsClass.CallStatic<string>("getInstallId");
-					#elif UNITY_IOS
-					return _installId();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-			}
-
-			public static string LibraryVersion
-			{
-				get
-				{
-					#if UNITY_ANDROID
-					return LocalyticsClass.CallStatic<string>("getLibraryVersion");
-					#elif UNITY_IOS
-					return _libraryVersion();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-			}
-
-			public static bool LoggingEnabled
-			{
-				get
-				{
-					#if UNITY_ANDROID
-					return LocalyticsClass.CallStatic<bool>("isLoggingEnabled");
-					#elif UNITY_IOS
-					return _isLoggingEnabled();
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-				set
-				{
-					#if UNITY_ANDROID
-					LocalyticsClass.CallStatic("setLoggingEnabled", value);
-					#elif UNITY_IOS
-					_setLoggingEnabled(value);
-					#else
-					throw new NotImplementedException("Localytics Unity SDK only supports iOS or Android");
-					#endif
-				}
-			}
-
-			/*
-			 * Platform specific Native SDK Calls
-			 *
-			 **/
-
 
 #if UNITY_IOS
 		public static string PushToken
@@ -1395,625 +1112,913 @@ namespace LocalyticsUnity {
 
 #endif
 
-#if UNITY_ANDROID
+		public static void RegisterForMessagingEvents ()
+		{
+			#if UNITY_ANDROID
+			if (_messagingListener == null)
+			{
+				_messagingListener = new MessagingListener();
+			}
 
+			LocalyticsClass.CallStatic("setMessagingListener", _messagingListener);
+			#elif UNITY_IOS
+			_registerReceiveMessagingCallback (ReceiveMessagingMessage);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void UnregisterForMessagingEvents ()
+		{
+			#if UNITY_ANDROID
+			if (_messagingListener == null)
+			{
+				return;
+			}
+
+			LocalyticsClass.CallStatic("setMessagingListener", null);
+			#elif UNITY_IOS
+			_removeMessagingCallback ();
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		// #################################################
+		// Location
+		// #################################################
+
+		public static bool LocationMonitoringEnabled
+		{
+#if UNITY_ANDROID
+			get
+			{
+				return LocalyticsClass.CallStatic<bool>("isLocationMonitoringEnabled");
+			}
+#endif
+			set
+			{
+				#if UNITY_ANDROID
+				LocalyticsClass.CallStatic("setLocationMonitoringEnabled", value);
+				#elif UNITY_IOS
+				_setLocationMonitoringEnabled(value);
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+		}
+
+		public static List<CircularRegionInfo> GetGeofencesToMonitor (double latitude, double longitude)
+		{
+			#if UNITY_ANDROID
+			AndroidJavaObject listObject = LocalyticsClass.CallStatic<AndroidJavaObject>("getGeofencesToMonitor", latitude, longitude);
+			return ConvertGeofencesList(listObject);
+			#elif UNITY_IOS
+			string json = _getGeofencesToMonitor(latitude, longitude);
+			return ConvertGeofencesListFromJson(json);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void TriggerRegions (List<CircularRegionInfo> regions, RegionEvent regionEvent)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("triggerRegions", ConvertRegionInfoList(regions), GetRegionEventEnum(regionEvent));
+			#elif UNITY_IOS
+			string values = "";
+			if (regions != null)
+			{
+				values = ConvertRegionInfoList(regions);
+			}
+			_triggerRegions(values, (int)regionEvent);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void RegisterForLocationEvents ()
+		{
+			#if UNITY_ANDROID
+			if (_locationListener == null)
+			{
+				_locationListener = new LocationListener();
+			}
+
+			LocalyticsClass.CallStatic("setLocationListener", _locationListener);
+			#elif UNITY_IOS
+			_registerReceiveLocationCallback (ReceiveLocationMessage);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void UnregisterForLocationEvents ()
+		{
+			#if UNITY_ANDROID
+			if (_locationListener == null)
+			{
+				return;
+			}
+
+			LocalyticsClass.CallStatic("setLocationListener", null);
+			#elif UNITY_IOS
+			_removeLocationCallback ();
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		// #################################################
+		// User Information
+		// #################################################
+
+		public static string CustomerId
+		{
+			get
+			{
+				#if UNITY_ANDROID
+				return LocalyticsClass.CallStatic<string>("getCustomerId");
+				#elif UNITY_IOS
+				return _customerId();
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+			set
+			{
+				#if UNITY_ANDROID
+				LocalyticsClass.CallStatic("setCustomerId", value);
+				#elif UNITY_IOS
+				_setCustomerId(value);
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+		}
+
+		public static string GetIdentifier (string key)
+		{
+			#if UNITY_ANDROID
+			return LocalyticsClass.CallStatic<string>("getIdentifier", key);
+			#elif UNITY_IOS
+			return _getIdentifier (key);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetIdentifier (string key, string value)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setIdentifier", key, value);
+			#elif UNITY_IOS
+			_setIdentifier (key, value);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetLocation (LocationInfo location)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setLocation", LocationInfoToLocation(location));
+			#elif UNITY_IOS
+			_setLocation(location.latitude, location.longitude);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		// #################################################
+		// Developer Options
+		// #################################################
+
+		public static void SetOption (string key, string stringValue)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/String", stringValue));
+			#elif UNITY_IOS
+			_setStringOption(key, stringValue);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetOption (string key, long longValue)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/Long", longValue));
+			#elif UNITY_IOS
+			_setLongOption(key, longValue);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static void SetOption (string key, bool boolValue)
+		{
+			#if UNITY_ANDROID
+			LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/Boolean", boolValue));
+			#elif UNITY_IOS
+			_setBoolOption(key, boolValue);
+			#else
+			throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+			#endif
+		}
+
+		public static string AppKey
+		{
+			get
+			{
+				#if UNITY_ANDROID
+				return LocalyticsClass.CallStatic<string>("getAppKey");
+				#elif UNITY_IOS
+				return _appKey();
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+		}
+
+		public static string InstallId
+		{
+			get
+			{
+				#if UNITY_ANDROID
+				return LocalyticsClass.CallStatic<string>("getInstallId");
+				#elif UNITY_IOS
+				return _installId();
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+		}
+
+		public static string LibraryVersion
+		{
+			get
+			{
+				#if UNITY_ANDROID
+				return LocalyticsClass.CallStatic<string>("getLibraryVersion");
+				#elif UNITY_IOS
+				return _libraryVersion();
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+		}
+
+		public static bool LoggingEnabled
+		{
+			get
+			{
+				#if UNITY_ANDROID
+				return LocalyticsClass.CallStatic<bool>("isLoggingEnabled");
+				#elif UNITY_IOS
+				return _isLoggingEnabled();
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+			set
+			{
+				#if UNITY_ANDROID
+				LocalyticsClass.CallStatic("setLoggingEnabled", value);
+				#elif UNITY_IOS
+				_setLoggingEnabled(value);
+				#else
+				throw new NotImplementedException ("Localytics Unity SDK only supports iOS or Android");
+				#endif
+			}
+		}
+
+#if UNITY_ANDROID
+		
 		/*
 		 * Android Helpers
-		 * */
-	    private static AnalyticsListener _analyticsListener;
-	    private static MessagingListener _messagingListener;
-			private static LocationListener _locationListener;
+		 *
+		 **/
+		private static AnalyticsListener _analyticsListener;
+		private static MessagingListener _messagingListener;
+		private static LocationListener _locationListener;
 
-	    private static AndroidJavaClass _localyticsClass;
-	    private static AndroidJavaClass LocalyticsClass
-	    {
-	        get
-	        {
-	            if (_localyticsClass == null)
-	            {
-	                _localyticsClass = new AndroidJavaClass("com.localytics.android.Localytics");
-	            }
-	            return _localyticsClass;
-	        }
-	    }
-
-	    private static AndroidJavaObject DictionaryToMap(Dictionary<string, string> dict)
-	    {
-	        var map = new AndroidJavaObject("java.util.HashMap");
-
-	        if (dict == null || dict.Count == 0)
-					{
-						return map;
-					}
-
-	        IntPtr putMethod = AndroidJNIHelper.GetMethodID(map.GetRawClass(), "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-
-	        var args = new object[2];
-	        foreach (KeyValuePair<string, string> kvp in dict)
-	        {
-	            using (var k = new AndroidJavaObject("java.lang.String", kvp.Key))
-	            {
-	                using (var v = new AndroidJavaObject("java.lang.String", kvp.Value))
-	                {
-	                    args[0] = k;
-	                    args[1] = v;
-	                    AndroidJNI.CallObjectMethod(map.GetRawObject(), putMethod, AndroidJNIHelper.CreateJNIArgArray(args));
-	                }
-	            }
-	        }
-	        return map;
-	    }
-
-			private static AndroidJavaObject DictionaryToBundle(Dictionary<string, string> dict)
-	    {
-	        var bundle = new AndroidJavaObject("android.os.Bundle");
-
-	        if (dict == null || dict.Count == 0)
-					{
-						return bundle;
-					}
-
-	        IntPtr putMethod = AndroidJNIHelper.GetMethodID(bundle.GetRawClass(), "putString", "(Ljava/lang/String;Ljava/lang/String;)V;");
-
-	        var args = new object[2];
-	        foreach (KeyValuePair<string, string> kvp in dict)
-	        {
-	            using (var k = new AndroidJavaObject("java.lang.String", kvp.Key))
-	            {
-	                using (var v = new AndroidJavaObject("java.lang.String", kvp.Value))
-	                {
-	                    args[0] = k;
-	                    args[1] = v;
-	                    AndroidJNI.CallObjectMethod(bundle.GetRawObject(), putMethod, AndroidJNIHelper.CreateJNIArgArray(args));
-	                }
-	            }
-	        }
-	        return bundle;
-	    }
-
-	    public static Dictionary<string, string> MapToDictionary(AndroidJavaObject obj)
-	    {
-	        var mapClazz = new AndroidJavaObject("java.util.HashMap");
-	        var setClazz = new AndroidJavaObject("java.util.HashSet");
-
-	        IntPtr keySetMethod = AndroidJNIHelper.GetMethodID(obj.GetRawClass(), "keySet", "()Ljava/util/Set;");
-	        IntPtr set = AndroidJNI.CallObjectMethod(obj.GetRawObject(), keySetMethod, new jvalue[] { });
-	        IntPtr toArrayMethod = AndroidJNI.GetMethodID(setClazz.GetRawClass(), "toArray", "()[Ljava/lang/Object;");
-	        IntPtr array = AndroidJNI.CallObjectMethod(set, toArrayMethod, new jvalue[] { });
-
-	        var dict = new Dictionary<string, string>();
-	        var keys = AndroidJNIHelper.ConvertFromJNIArray<string[]>(array);
-	        IntPtr getMethod = AndroidJNIHelper.GetMethodID(mapClazz.GetRawClass(), "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
-	        foreach (var k in keys)
-	        {
-	            string v = AndroidJNI.CallStringMethod(obj.GetRawObject(), getMethod, new jvalue[] { new jvalue() { l = AndroidJNI.NewStringUTF(k) } });
-	            dict.Add(k, v);
-	        }
-
-	        return dict;
-	    }
-
-			private static AndroidJavaObject ConvertCustomerInfo(CustomerInfo obj)
+		private static AndroidJavaClass _localyticsClass;
+		private static AndroidJavaClass LocalyticsClass
+		{
+			get
 			{
-				var builder = new AndroidJavaObject("com.localytics.android.Customer$Builder");
-				if (obj != null)
+				if (_localyticsClass == null)
 				{
-					var args = new object[1];
-					if (obj.CustomerId != null)
-					{
-						IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setCustomerId", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
-						args[0] = obj.CustomerId;
-						AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
-					}
-
-					if (obj.FirstName != null)
-					{
-						IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setFirstName", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
-						args[0] = obj.FirstName;
-						AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
-					}
-
-					if (obj.LastName != null)
-					{
-						IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setLastName", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
-						args[0] = obj.LastName;
-						AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
-					}
-
-					if (obj.FullName != null)
-					{
-						IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setFullName", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
-						args[0] = obj.FullName;
-						AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
-					}
-
-					if (obj.EmailAddress != null)
-					{
-						IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setEmailAddress", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
-						args[0] = obj.EmailAddress;
-						AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
-					}
+					_localyticsClass = new AndroidJavaClass("com.localytics.android.Localytics");
 				}
+				return _localyticsClass;
+			}
+		}
 
-				return builder.Call<AndroidJavaObject> ("build", new object[]{});
+		private static AndroidJavaObject DictionaryToMap(Dictionary<string, string> dict)
+		{
+			var map = new AndroidJavaObject("java.util.HashMap");
+
+			if (dict == null || dict.Count == 0)
+			{
+				return map;
 			}
 
-			private static List<CircularRegionInfo> ConvertGeofencesList(AndroidJavaObject listObject)
-			{
-				int size = listObject.Call<int>("size");
+			IntPtr putMethod = AndroidJNIHelper.GetMethodID(map.GetRawClass(), "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 
-				List<CircularRegionInfo> regionInfos = new List<CircularRegionInfo>();
-				for (int i = 0; i < size; i++)
+			var args = new object[2];
+			foreach (KeyValuePair<string, string> kvp in dict)
+			{
+				using (var k = new AndroidJavaObject("java.lang.String", kvp.Key))
 				{
-					AndroidJavaObject regionObj = listObject.Call<AndroidJavaObject>("get", i);
-					CircularRegionInfo info = ConvertCircularRegionInfoFromJava(regionObj);
-					regionInfos.Add(info);
+					using (var v = new AndroidJavaObject("java.lang.String", kvp.Value))
+					{
+						args[0] = k;
+						args[1] = v;
+						AndroidJNI.CallObjectMethod(map.GetRawObject(), putMethod, AndroidJNIHelper.CreateJNIArgArray(args));
+					}
 				}
-				return regionInfos;
+			}
+			return map;
+		}
+
+		private static AndroidJavaObject DictionaryToBundle(Dictionary<string, string> dict)
+		{
+			var bundle = new AndroidJavaObject("android.os.Bundle");
+
+			if (dict == null || dict.Count == 0)
+			{
+				return bundle;
 			}
 
-			private static AndroidJavaObject ConvertRegionInfoList(List<CircularRegionInfo> regions)
+			IntPtr putMethod = AndroidJNIHelper.GetMethodID(bundle.GetRawClass(), "putString", "(Ljava/lang/String;Ljava/lang/String;)V;");
+
+			var args = new object[2];
+			foreach (KeyValuePair<string, string> kvp in dict)
 			{
-				var list = new AndroidJavaObject("java.util.ArrayList");
-
-				if (regions == null || regions.Count == 0)
+				using (var k = new AndroidJavaObject("java.lang.String", kvp.Key))
 				{
-					return list;
+					using (var v = new AndroidJavaObject("java.lang.String", kvp.Value))
+					{
+						args[0] = k;
+						args[1] = v;
+						AndroidJNI.CallObjectMethod(bundle.GetRawObject(), putMethod, AndroidJNIHelper.CreateJNIArgArray(args));
+					}
+				}
+			}
+			return bundle;
+		}
+
+		public static Dictionary<string, string> MapToDictionary(AndroidJavaObject obj)
+		{
+			var mapClazz = new AndroidJavaObject("java.util.HashMap");
+			var setClazz = new AndroidJavaObject("java.util.HashSet");
+
+			IntPtr keySetMethod = AndroidJNIHelper.GetMethodID(obj.GetRawClass(), "keySet", "()Ljava/util/Set;");
+			IntPtr set = AndroidJNI.CallObjectMethod(obj.GetRawObject(), keySetMethod, new jvalue[] { });
+			IntPtr toArrayMethod = AndroidJNI.GetMethodID(setClazz.GetRawClass(), "toArray", "()[Ljava/lang/Object;");
+			IntPtr array = AndroidJNI.CallObjectMethod(set, toArrayMethod, new jvalue[] { });
+
+			var dict = new Dictionary<string, string>();
+			var keys = AndroidJNIHelper.ConvertFromJNIArray<string[]>(array);
+			IntPtr getMethod = AndroidJNIHelper.GetMethodID(mapClazz.GetRawClass(), "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+			foreach (var k in keys)
+			{
+				string v = AndroidJNI.CallStringMethod(obj.GetRawObject(), getMethod, new jvalue[] { new jvalue() { l = AndroidJNI.NewStringUTF(k) } });
+				dict.Add(k, v);
+			}
+
+			return dict;
+		}
+
+		private static AndroidJavaObject ConvertCustomerInfo(CustomerInfo obj)
+		{
+			var builder = new AndroidJavaObject("com.localytics.android.Customer$Builder");
+			if (obj != null)
+			{
+				var args = new object[1];
+				if (obj.CustomerId != null)
+				{
+					IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setCustomerId", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
+					args[0] = obj.CustomerId;
+					AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
 				}
 
-				foreach (CircularRegionInfo info in regions)
+				if (obj.FirstName != null)
 				{
-					list.Call<bool>("add", ConvertCircularRegionInfoToJava(info));
+					IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setFirstName", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
+					args[0] = obj.FirstName;
+					AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
 				}
+
+				if (obj.LastName != null)
+				{
+					IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setLastName", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
+					args[0] = obj.LastName;
+					AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
+				}
+
+				if (obj.FullName != null)
+				{
+					IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setFullName", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
+					args[0] = obj.FullName;
+					AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
+				}
+
+				if (obj.EmailAddress != null)
+				{
+					IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setEmailAddress", "(Ljava/lang/String;)Lcom.localytics.android.Customer$Builder;");
+					args[0] = obj.EmailAddress;
+					AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
+				}
+			}
+
+			return builder.Call<AndroidJavaObject> ("build", new object[]{});
+		}
+
+		private static List<CircularRegionInfo> ConvertGeofencesList(AndroidJavaObject listObject)
+		{
+			int size = listObject.Call<int>("size");
+
+			List<CircularRegionInfo> regionInfos = new List<CircularRegionInfo>();
+			for (int i = 0; i < size; i++)
+			{
+				AndroidJavaObject regionObj = listObject.Call<AndroidJavaObject>("get", i);
+				CircularRegionInfo info = ConvertCircularRegionInfoFromJava(regionObj);
+				regionInfos.Add(info);
+			}
+			return regionInfos;
+		}
+
+		private static AndroidJavaObject ConvertRegionInfoList(List<CircularRegionInfo> regions)
+		{
+			var list = new AndroidJavaObject("java.util.ArrayList");
+
+			if (regions == null || regions.Count == 0)
+			{
 				return list;
 			}
 
-			private static CircularRegionInfo ConvertCircularRegionInfoFromJava(AndroidJavaObject obj)
+			foreach (CircularRegionInfo info in regions)
 			{
-				CircularRegionInfo info = new CircularRegionInfo();
-				info.UniqueId = obj.Call<string>("getUniqueId");
-				info.Latitude = obj.Call<double>("getLatitude");
-				info.Longitude = obj.Call<double>("getLongitude");
-				info.Radius = obj.Call<int>("getRadius");
-				info.Name = obj.Call<string>("getName");
-				info.Type = obj.Call<string>("getType");
-				info.Attributes = MapToDictionary(obj.Call<AndroidJavaObject>("getAttributes"));
-				return info;
+				list.Call<bool>("add", ConvertCircularRegionInfoToJava(info));
 			}
+			return list;
+		}
 
-			private static AndroidJavaObject ConvertCircularRegionInfoToJava(CircularRegionInfo info)
+		private static CircularRegionInfo ConvertCircularRegionInfoFromJava(AndroidJavaObject obj)
+		{
+			CircularRegionInfo info = new CircularRegionInfo();
+			info.UniqueId = obj.Call<string>("getUniqueId");
+			info.Latitude = obj.Call<double>("getLatitude");
+			info.Longitude = obj.Call<double>("getLongitude");
+			info.Radius = obj.Call<int>("getRadius");
+			info.Name = obj.Call<string>("getName");
+			info.Type = obj.Call<string>("getType");
+			info.Attributes = MapToDictionary(obj.Call<AndroidJavaObject>("getAttributes"));
+			return info;
+		}
+
+		private static AndroidJavaObject ConvertCircularRegionInfoToJava(CircularRegionInfo info)
+		{
+			var builder = new AndroidJavaObject("com.localytics.android.CircularRegion$Builder");
+			if (info != null)
 			{
-				var builder = new AndroidJavaObject("com.localytics.android.CircularRegion$Builder");
-				if (info != null)
+				var args = new object[1];
+				// Only care about uniqueId b/c triggerRegions will pull the populated CircularRegion
+				// object from the DB
+				if (info.UniqueId != null)
 				{
-					var args = new object[1];
-					// Only care about uniqueId b/c triggerRegions will pull the populated CircularRegion
-					// object from the DB
-					if (info.UniqueId != null)
-					{
-						IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setUniqueId", "(Ljava/lang/String;)Lcom.localytics.android.CircularRegion$Builder;");
-						args[0] = info.UniqueId;
-						AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
-					}
-				}
-
-				return builder.Call<AndroidJavaObject> ("build", new object[]{});
-			}
-
-			private static PushCampaignInfo ConvertPushCampaign(AndroidJavaObject obj)
-			{
-				PushCampaignInfo info = new PushCampaignInfo();
-				info.CampaignId = obj.Call<long>("getCampaignId");
-				info.Name = obj.Call<string>("getName");
-				info.Attributes = MapToDictionary(obj.Call<AndroidJavaObject>("getAttributes"));
-				info.CreativeId = obj.Call<long>("getCreativeId");
-				info.CreativeType = obj.Call<string>("getCreativeType");
-				info.Message = obj.Call<string>("getMessage");
-				info.SoundFilename = obj.Call<string>("getSoundFilename");
-				return info;
-			}
-
-			private static PlacesCampaignInfo ConvertPlacesCampaign(AndroidJavaObject obj)
-			{
-				PlacesCampaignInfo info = new PlacesCampaignInfo();
-				info.CampaignId = obj.Call<long>("getCampaignId");
-				info.Name = obj.Call<string>("getName");
-				info.Attributes = MapToDictionary(obj.Call<AndroidJavaObject>("getAttributes"));
-				info.CreativeId = obj.Call<long>("getCreativeId");
-				info.CreativeType = obj.Call<string>("getCreativeType");
-				info.Message = obj.Call<string>("getMessage");
-				info.SoundFilename = obj.Call<string>("getSoundFilename");
-				info.Region = ConvertCircularRegionInfoFromJava(obj.Call<AndroidJavaObject>("getRegion"));
-				info.TriggerEvent = RegionEventFromJava(obj.Call<AndroidJavaObject>("getTriggerEvent"));
-				return info;
-			}
-
-	    private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-	    private static Array DateTimeArrayToDateArray(DateTime[] dates)
-	    {
-	        if (dates == null || dates.Length == 0)
-					{
-						return new object[0];
-					}
-
-	        var arr = new AndroidJavaObject[dates.Length];
-	        for (int i = 0; i < dates.Length; i++)
-	        {
-	            arr[i] = DateTimeToDate(dates[i]);
-	        }
-
-	        return arr;
-	    }
-
-	    private static AndroidJavaObject DateTimeToDate(DateTime date)
-	    {
-	        return new AndroidJavaObject("java.util.Date", Convert.ToInt64((date - UnixEpoch).TotalMilliseconds));
-	    }
-
-	    private static AndroidJavaObject LocationInfoToLocation(LocationInfo location)
-	    {
-	        var l = new AndroidJavaObject("android.location.Location", "unity");
-	        l.Call("setLatitude", (double)location.latitude);
-	        l.Call("setLongitude", (double)location.longitude);
-	        l.Call("setAltitude", (double)location.altitude);
-	        l.Call("setTime", (long)location.timestamp * 1000);
-	        l.Call("setAccuracy", (location.horizontalAccuracy + location.verticalAccuracy) / 2.0f);
-	        return l;
-	    }
-
-	    private static AndroidJavaObject GetProfileScopeEnum(ProfileScope scope)
-	    {
-	        string name = "";
-
-	        switch (scope)
-	        {
-	            case ProfileScope.Application:
-	                name = "APPLICATION";
-	                break;
-	            case ProfileScope.Organization:
-	                name = "ORGANIZATION";
-	                break;
-	        }
-	        using (var c = new AndroidJavaClass("com.localytics.android.Localytics$ProfileScope"))
-	        {
-	            return c.GetStatic<AndroidJavaObject>(name);
-	        }
-	    }
-
-	    private static AndroidJavaObject GetInAppMessageDismissButtonLocationEnum(InAppMessageDismissButtonLocation buttonLocation)
-	    {
-	        string name = "";
-
-	        switch (buttonLocation)
-	        {
-	            case InAppMessageDismissButtonLocation.Left:
-	                name = "LEFT";
-	                break;
-	            case InAppMessageDismissButtonLocation.Right:
-	                name = "RIGHT";
-	                break;
-	        }
-
-	        using (var c = new AndroidJavaClass("com.localytics.android.Localytics$InAppMessageDismissButtonLocation"))
-	        {
-	            return c.GetStatic<AndroidJavaObject>(name);
-	        }
-	    }
-
-			private static AndroidJavaObject GetRegionEventEnum(RegionEvent regionEvent)
-			{
-				string name = "";
-
-				switch (regionEvent)
-				{
-					case RegionEvent.Enter:
-						name = "ENTER";
-						break;
-					case RegionEvent.Exit:
-						name = "EXIT";
-						break;
-				}
-
-				using (var c = new AndroidJavaClass("com.localytics.android.Region$Event"))
-				{
-					return c.GetStatic<AndroidJavaObject>(name);
+					IntPtr method = AndroidJNIHelper.GetMethodID(builder.GetRawClass(), "setUniqueId", "(Ljava/lang/String;)Lcom.localytics.android.CircularRegion$Builder;");
+					args[0] = info.UniqueId;
+					AndroidJNI.CallObjectMethod(builder.GetRawObject(), method, AndroidJNIHelper.CreateJNIArgArray(args));
 				}
 			}
 
-			private static RegionEvent RegionEventFromJava(AndroidJavaObject obj)
+			return builder.Call<AndroidJavaObject> ("build", new object[]{});
+		}
+
+		private static PushCampaignInfo ConvertPushCampaign(AndroidJavaObject obj)
+		{
+			PushCampaignInfo info = new PushCampaignInfo();
+			info.CampaignId = obj.Call<long>("getCampaignId");
+			info.Name = obj.Call<string>("getName");
+			info.Attributes = MapToDictionary(obj.Call<AndroidJavaObject>("getAttributes"));
+			info.CreativeId = obj.Call<long>("getCreativeId");
+			info.CreativeType = obj.Call<string>("getCreativeType");
+			info.Message = obj.Call<string>("getMessage");
+			info.SoundFilename = obj.Call<string>("getSoundFilename");
+			return info;
+		}
+
+		private static PlacesCampaignInfo ConvertPlacesCampaign(AndroidJavaObject obj)
+		{
+			PlacesCampaignInfo info = new PlacesCampaignInfo();
+			info.CampaignId = obj.Call<long>("getCampaignId");
+			info.Name = obj.Call<string>("getName");
+			info.Attributes = MapToDictionary(obj.Call<AndroidJavaObject>("getAttributes"));
+			info.CreativeId = obj.Call<long>("getCreativeId");
+			info.CreativeType = obj.Call<string>("getCreativeType");
+			info.Message = obj.Call<string>("getMessage");
+			info.SoundFilename = obj.Call<string>("getSoundFilename");
+			info.Region = ConvertCircularRegionInfoFromJava(obj.Call<AndroidJavaObject>("getRegion"));
+			info.TriggerEvent = RegionEventFromJava(obj.Call<AndroidJavaObject>("getTriggerEvent"));
+			return info;
+		}
+
+		private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+		private static Array DateTimeArrayToDateArray(DateTime[] dates)
+		{
+			if (dates == null || dates.Length == 0)
 			{
-				string name = obj.Call<string>("name");
-				switch (name)
+				return new object[0];
+			}
+
+			var arr = new AndroidJavaObject[dates.Length];
+			for (int i = 0; i < dates.Length; i++)
+			{
+				arr[i] = DateTimeToDate(dates[i]);
+			}
+
+			return arr;
+		}
+
+		private static AndroidJavaObject DateTimeToDate(DateTime date)
+		{
+			return new AndroidJavaObject("java.util.Date", Convert.ToInt64((date - UnixEpoch).TotalMilliseconds));
+		}
+
+		private static AndroidJavaObject LocationInfoToLocation(LocationInfo location)
+		{
+			var l = new AndroidJavaObject("android.location.Location", "unity");
+			l.Call("setLatitude", (double)location.latitude);
+			l.Call("setLongitude", (double)location.longitude);
+			l.Call("setAltitude", (double)location.altitude);
+			l.Call("setTime", (long)location.timestamp * 1000);
+			l.Call("setAccuracy", (location.horizontalAccuracy + location.verticalAccuracy) / 2.0f);
+			return l;
+		}
+
+		private static AndroidJavaObject GetProfileScopeEnum(ProfileScope scope)
+		{
+			string name = "";
+
+			switch (scope)
+			{
+				case ProfileScope.Application:
+					name = "APPLICATION";
+					break;
+				case ProfileScope.Organization:
+					name = "ORGANIZATION";
+					break;
+			}
+			using (var c = new AndroidJavaClass("com.localytics.android.Localytics$ProfileScope"))
+			{
+				return c.GetStatic<AndroidJavaObject>(name);
+			}
+		}
+
+		private static AndroidJavaObject GetInAppMessageDismissButtonLocationEnum(InAppMessageDismissButtonLocation buttonLocation)
+		{
+			string name = "";
+
+			switch (buttonLocation)
+			{
+				case InAppMessageDismissButtonLocation.Left:
+					name = "LEFT";
+					break;
+				case InAppMessageDismissButtonLocation.Right:
+					name = "RIGHT";
+					break;
+			}
+
+			using (var c = new AndroidJavaClass("com.localytics.android.Localytics$InAppMessageDismissButtonLocation"))
+			{
+				return c.GetStatic<AndroidJavaObject>(name);
+			}
+		}
+
+		private static AndroidJavaObject GetRegionEventEnum(RegionEvent regionEvent)
+		{
+			string name = "";
+
+			switch (regionEvent)
+			{
+				case RegionEvent.Enter:
+					name = "ENTER";
+					break;
+				case RegionEvent.Exit:
+					name = "EXIT";
+					break;
+			}
+
+			using (var c = new AndroidJavaClass("com.localytics.android.Region$Event"))
+			{
+				return c.GetStatic<AndroidJavaObject>(name);
+			}
+		}
+
+		private static RegionEvent RegionEventFromJava(AndroidJavaObject obj)
+		{
+			string name = obj.Call<string>("name");
+			switch (name)
+			{
+				default:
+				case "ENTER":
+					return RegionEvent.Enter;
+				case "EXIT":
+					return RegionEvent.Exit;
+			}
+		}
+
+		class AnalyticsListener : AndroidJavaProxy
+		{
+			public AnalyticsListener()
+				: base("com.localytics.android.AnalyticsListener")
+			{
+
+			}
+
+			public override AndroidJavaObject Invoke(string methodName, AndroidJavaObject[] javaArgs)
+			{
+				// hack to intercept Map for attributes
+				if (methodName == "localyticsDidTagEvent")
 				{
-					default:
-					case "ENTER":
-						return RegionEvent.Enter;
-					case "EXIT":
-						return RegionEvent.Exit;
+					string e = javaArgs[0].Call<string>("toString");
+					var attributes = Localytics.MapToDictionary(javaArgs[1]);
+					string c = javaArgs[2].Call<string>("toString");
+
+					if (Localytics.OnLocalyticsDidTagEvent != null)
+					{
+						Localytics.OnLocalyticsDidTagEvent(e, attributes, Int64.Parse(c));
+						return null;
+					}
+				}
+
+				return base.Invoke(methodName, javaArgs);
+			}
+
+			void localyticsSessionDidOpen(bool isFirst, bool isUpgrade, bool isResume)
+			{
+				if (Localytics.OnLocalyticsSessionDidOpen != null)
+				{
+					Localytics.OnLocalyticsSessionDidOpen(isFirst, isUpgrade, isResume);
 				}
 			}
 
-	    class AnalyticsListener : AndroidJavaProxy
-	    {
-	        public AnalyticsListener()
-	            : base("com.localytics.android.AnalyticsListener")
-	        {
-
-	        }
-
-	        public override AndroidJavaObject Invoke(string methodName, AndroidJavaObject[] javaArgs)
-	        {
-	            // hack to intercept Map for attributes
-	            if (methodName == "localyticsDidTagEvent")
-	            {
-	                string e = javaArgs[0].Call<string>("toString");
-	                var attributes = Localytics.MapToDictionary(javaArgs[1]);
-	                string c = javaArgs[2].Call<string>("toString");
-
-	                if (Localytics.OnLocalyticsDidTagEvent != null)
-									{
-	                    Localytics.OnLocalyticsDidTagEvent(e, attributes, Int64.Parse(c));
-											return null;
-									}
-	            }
-
-	            return base.Invoke(methodName, javaArgs);
-	        }
-
-	        void localyticsSessionDidOpen(bool isFirst, bool isUpgrade, bool isResume)
-	        {
-	            if (Localytics.OnLocalyticsSessionDidOpen != null)
-							{
-								Localytics.OnLocalyticsSessionDidOpen(isFirst, isUpgrade, isResume);
-							}
-	        }
-
-	        void localyticsSessionWillClose()
-	        {
-	            if (Localytics.OnLocalyticsSessionWillClose != null)
-							{
-								Localytics.OnLocalyticsSessionWillClose();
-							}
-	        }
-
-	        void localyticsSessionWillOpen(bool isFirst, bool isUpgrade, bool isResume)
-	        {
-	            if (Localytics.OnLocalyticsSessionWillOpen != null)
-							{
-								Localytics.OnLocalyticsSessionWillOpen(isFirst, isUpgrade, isResume);
-							}
-	        }
-
-					// hack for object comparison
-					static bool isSelf;
-					int hashCode() {
-						isSelf = true;
-						return this.GetHashCode();
-					}
-
-					bool equals(AndroidJavaObject o) {
-						isSelf = false;
-						o.Call<int>("hashCode");
-						return isSelf;
-					}
-	    }
-
-	    class MessagingListener : AndroidJavaProxy
-	    {
-	        public MessagingListener()
-	            : base("com.localytics.android.MessagingListener")
-	        {
-
-	        }
-
-					public override AndroidJavaObject Invoke(string methodName, AndroidJavaObject[] javaArgs)
-	        {
-	            // hack to intercept campaign objects
-	            if (methodName == "localyticsShouldShowPushNotification")
-	            {
-								PushCampaignInfo info = ConvertPushCampaign(javaArgs[0]);
-								if (Localytics.OnLocalyticsShouldShowPushNotification != null)
-								{
-									bool should = Localytics.OnLocalyticsShouldShowPushNotification(info);
-									return new AndroidJavaObject("java.lang.Boolean", should);
-								}
-	            }
-							else if (methodName == "localyticsShouldShowPlacesPushNotification")
-							{
-								PlacesCampaignInfo info = ConvertPlacesCampaign(javaArgs[0]);
-								if (Localytics.OnLocalyticsShouldShowPlacesPushNotification != null)
-								{
-									bool should = Localytics.OnLocalyticsShouldShowPlacesPushNotification(info);
-									return new AndroidJavaObject("java.lang.Boolean", should);
-								}
-							}
-							else if (methodName == "localyticsWillShowPlacesPushNotification")
-							{
-								AndroidJavaObject notifBuilder = javaArgs[0];
-								PlacesCampaignInfo info = ConvertPlacesCampaign(javaArgs[1]);
-								if (Localytics.OnLocalyticsWillShowPlacesPushNotification != null)
-								{
-									return Localytics.OnLocalyticsWillShowPlacesPushNotification(notifBuilder, info);
-								}
-							}
-							else if (methodName == "localyticsWillShowPushNotification")
-							{
-								AndroidJavaObject notifBuilder = javaArgs[0];
-								PushCampaignInfo info = ConvertPushCampaign(javaArgs[1]);
-								if (Localytics.OnLocalyticsWillShowPushNotification != null)
-								{
-									return Localytics.OnLocalyticsWillShowPushNotification(notifBuilder, info);
-								}
-							}
-
-	            return base.Invoke(methodName, javaArgs);
-	        }
-
-	        void localyticsDidDismissInAppMessage()
-	        {
-	            if (Localytics.OnLocalyticsDidDismissInAppMessage != null)
-							{
-								Localytics.OnLocalyticsDidDismissInAppMessage();
-							}
-	        }
-
-	        void localyticsDidDisplayInAppMessage()
-	        {
-	            if (Localytics.OnLocalyticsDidDisplayInAppMessage != null)
-							{
-								Localytics.OnLocalyticsDidDisplayInAppMessage();
-							}
-	        }
-
-	        void localyticsWillDismissInAppMessage()
-	        {
-	            if (Localytics.OnLocalyticsWillDismissInAppMessage != null)
-							{
-								Localytics.OnLocalyticsWillDismissInAppMessage();
-							}
-	        }
-
-	        void localyticsWillDisplayInAppMessage()
-	        {
-	            if (Localytics.OnLocalyticsWillDisplayInAppMessage != null)
-							{
-								Localytics.OnLocalyticsWillDisplayInAppMessage();
-							}
-	        }
-
-					bool localyticsShouldShowPushNotification(PushCampaignInfo campaign)
-					{
-						if (Localytics.OnLocalyticsShouldShowPushNotification != null)
-						{
-							return Localytics.OnLocalyticsShouldShowPushNotification(campaign);
-						}
-
-						return true;
-					}
-
-					bool localyticsShouldShowPlacesPushNotification(PlacesCampaignInfo campaign)
-					{
-						if (Localytics.OnLocalyticsShouldShowPlacesPushNotification != null)
-						{
-							return Localytics.OnLocalyticsShouldShowPlacesPushNotification(campaign);
-						}
-
-						return true;
-					}
-
-					AndroidJavaObject localyticsWillShowPlacesPushNotification(AndroidJavaObject notificationBuilder, PlacesCampaignInfo campaign)
-					{
-						if (Localytics.OnLocalyticsWillShowPlacesPushNotification != null)
-						{
-							return Localytics.OnLocalyticsWillShowPlacesPushNotification(notificationBuilder, campaign);
-						}
-
-						return notificationBuilder;
-					}
-
-					AndroidJavaObject localyticsWillShowPushNotification(AndroidJavaObject notificationBuilder, PushCampaignInfo campaign)
-					{
-						if (Localytics.OnLocalyticsWillShowPushNotification != null)
-						{
-							return Localytics.OnLocalyticsWillShowPushNotification(notificationBuilder, campaign);
-						}
-
-						return notificationBuilder;
-					}
-
-					// hack for object comparison
-					static bool isSelf;
-					int hashCode() {
-						isSelf = true;
-						return this.GetHashCode();
-					}
-
-					bool equals(AndroidJavaObject o) {
-						isSelf = false;
-						o.Call<int>("hashCode");
-						return isSelf;
-					}
-	    }
-
-			class LocationListener : AndroidJavaProxy
-	    {
-				public LocationListener()
-						: base("com.localytics.android.LocationListener")
+			void localyticsSessionWillClose()
+			{
+				if (Localytics.OnLocalyticsSessionWillClose != null)
 				{
+					Localytics.OnLocalyticsSessionWillClose();
+				}
+			}
+
+			void localyticsSessionWillOpen(bool isFirst, bool isUpgrade, bool isResume)
+			{
+				if (Localytics.OnLocalyticsSessionWillOpen != null)
+				{
+					Localytics.OnLocalyticsSessionWillOpen(isFirst, isUpgrade, isResume);
+				}
+			}
+
+			// hack for object comparison
+			static bool isSelf;
+			int hashCode()
+			{
+				isSelf = true;
+				return this.GetHashCode();
+			}
+
+			bool equals(AndroidJavaObject o)
+			{
+				isSelf = false;
+				o.Call<int>("hashCode");
+				return isSelf;
+			}
+		}
+
+		class MessagingListener : AndroidJavaProxy
+		{
+			public MessagingListener()
+				: base("com.localytics.android.MessagingListener")
+			{
+
+			}
+
+			public override AndroidJavaObject Invoke(string methodName, AndroidJavaObject[] javaArgs)
+			{
+				// hack to intercept campaign objects
+				if (methodName == "localyticsShouldShowPushNotification")
+				{
+					PushCampaignInfo info = ConvertPushCampaign(javaArgs[0]);
+					if (Localytics.OnLocalyticsShouldShowPushNotification != null)
+					{
+						bool should = Localytics.OnLocalyticsShouldShowPushNotification(info);
+						return new AndroidJavaObject("java.lang.Boolean", should);
+					}
+				}
+				else if (methodName == "localyticsShouldShowPlacesPushNotification")
+				{
+					PlacesCampaignInfo info = ConvertPlacesCampaign(javaArgs[0]);
+					if (Localytics.OnLocalyticsShouldShowPlacesPushNotification != null)
+					{
+						bool should = Localytics.OnLocalyticsShouldShowPlacesPushNotification(info);
+						return new AndroidJavaObject("java.lang.Boolean", should);
+					}
+				}
+				else if (methodName == "localyticsWillShowPlacesPushNotification")
+				{
+					AndroidJavaObject notifBuilder = javaArgs[0];
+					PlacesCampaignInfo info = ConvertPlacesCampaign(javaArgs[1]);
+					if (Localytics.OnLocalyticsWillShowPlacesPushNotification != null)
+					{
+						return Localytics.OnLocalyticsWillShowPlacesPushNotification(notifBuilder, info);
+					}
+				}
+				else if (methodName == "localyticsWillShowPushNotification")
+				{
+					AndroidJavaObject notifBuilder = javaArgs[0];
+					PushCampaignInfo info = ConvertPushCampaign(javaArgs[1]);
+					if (Localytics.OnLocalyticsWillShowPushNotification != null)
+					{
+						return Localytics.OnLocalyticsWillShowPushNotification(notifBuilder, info);
+					}
 				}
 
-				public override AndroidJavaObject Invoke(string methodName, AndroidJavaObject[] javaArgs)
-				{
-						// hack to intercept location and region objects
-						if (methodName == "localyticsDidUpdateLocation")
-						{
-							if (Localytics.OnLocalyticsDidUpdateLocation != null)
-							{
-								Localytics.OnLocalyticsDidUpdateLocation(javaArgs[0]);
-								return null;
-							}
-						}
-						else if (methodName == "localyticsDidTriggerRegions")
-						{
-							List<CircularRegionInfo> regions = ConvertGeofencesList(javaArgs[0]);
-							RegionEvent regionEvent = RegionEventFromJava(javaArgs[1]);
-							if (Localytics.OnLocalyticsDidTriggerRegions != null)
-							{
-								Localytics.OnLocalyticsDidTriggerRegions(regions, regionEvent);
-								return null;
-							}
-						}
-						else if (methodName == "localyticsDidUpdateMonitoredGeofences")
-						{
-							List<CircularRegionInfo> added = ConvertGeofencesList(javaArgs[0]);
-							List<CircularRegionInfo> removed = ConvertGeofencesList(javaArgs[1]);
-							if (Localytics.OnLocalyticsDidUpdateMonitoredGeofences != null)
-							{
-								Localytics.OnLocalyticsDidUpdateMonitoredGeofences(added, removed);
-								return null;
-							}
-						}
+				return base.Invoke(methodName, javaArgs);
+			}
 
-						return base.Invoke(methodName, javaArgs);
+			void localyticsDidDismissInAppMessage()
+			{
+				if (Localytics.OnLocalyticsDidDismissInAppMessage != null)
+				{
+					Localytics.OnLocalyticsDidDismissInAppMessage();
+				}
+			}
+
+			void localyticsDidDisplayInAppMessage()
+			{
+				if (Localytics.OnLocalyticsDidDisplayInAppMessage != null)
+				{
+					Localytics.OnLocalyticsDidDisplayInAppMessage();
+				}
+			}
+
+			void localyticsWillDismissInAppMessage()
+			{
+				if (Localytics.OnLocalyticsWillDismissInAppMessage != null)
+				{
+					Localytics.OnLocalyticsWillDismissInAppMessage();
+				}
+			}
+
+			void localyticsWillDisplayInAppMessage()
+			{
+				if (Localytics.OnLocalyticsWillDisplayInAppMessage != null)
+				{
+					Localytics.OnLocalyticsWillDisplayInAppMessage();
+				}
+			}
+
+			bool localyticsShouldShowPushNotification(PushCampaignInfo campaign)
+			{
+				if (Localytics.OnLocalyticsShouldShowPushNotification != null)
+				{
+					return Localytics.OnLocalyticsShouldShowPushNotification(campaign);
 				}
 
-				void localyticsDidUpdateLocation(AndroidJavaObject location)
+				return true;
+			}
+
+			bool localyticsShouldShowPlacesPushNotification(PlacesCampaignInfo campaign)
+			{
+				if (Localytics.OnLocalyticsShouldShowPlacesPushNotification != null)
+				{
+					return Localytics.OnLocalyticsShouldShowPlacesPushNotification(campaign);
+				}
+
+				return true;
+			}
+
+			AndroidJavaObject localyticsWillShowPlacesPushNotification(AndroidJavaObject notificationBuilder, PlacesCampaignInfo campaign)
+			{
+				if (Localytics.OnLocalyticsWillShowPlacesPushNotification != null)
+				{
+					return Localytics.OnLocalyticsWillShowPlacesPushNotification(notificationBuilder, campaign);
+				}
+
+				return notificationBuilder;
+			}
+
+			AndroidJavaObject localyticsWillShowPushNotification(AndroidJavaObject notificationBuilder, PushCampaignInfo campaign)
+			{
+				if (Localytics.OnLocalyticsWillShowPushNotification != null)
+				{
+					return Localytics.OnLocalyticsWillShowPushNotification(notificationBuilder, campaign);
+				}
+
+				return notificationBuilder;
+			}
+
+			// hack for object comparison
+			static bool isSelf;
+			int hashCode()
+			{
+				isSelf = true;
+				return this.GetHashCode();
+			}
+
+			bool equals(AndroidJavaObject o)
+			{
+				isSelf = false;
+				o.Call<int>("hashCode");
+				return isSelf;
+			}
+		}
+
+		class LocationListener : AndroidJavaProxy
+		{
+			public LocationListener()
+					: base("com.localytics.android.LocationListener")
+			{
+			}
+
+			public override AndroidJavaObject Invoke(string methodName, AndroidJavaObject[] javaArgs)
+			{
+				// hack to intercept location and region objects
+				if (methodName == "localyticsDidUpdateLocation")
 				{
 					if (Localytics.OnLocalyticsDidUpdateLocation != null)
 					{
-						Localytics.OnLocalyticsDidUpdateLocation(location);
+						Localytics.OnLocalyticsDidUpdateLocation(javaArgs[0]);
+						return null;
 					}
 				}
-
-				void localyticsDidTriggerRegions(List<CircularRegionInfo> regions, RegionEvent regionEvent)
+				else if (methodName == "localyticsDidTriggerRegions")
 				{
+					List<CircularRegionInfo> regions = ConvertGeofencesList(javaArgs[0]);
+					RegionEvent regionEvent = RegionEventFromJava(javaArgs[1]);
 					if (Localytics.OnLocalyticsDidTriggerRegions != null)
 					{
 						Localytics.OnLocalyticsDidTriggerRegions(regions, regionEvent);
+						return null;
 					}
 				}
-
-				void localyticsDidUpdateMonitoredGeofences(List<CircularRegionInfo> added, List<CircularRegionInfo> removed)
+				else if (methodName == "localyticsDidUpdateMonitoredGeofences")
 				{
+					List<CircularRegionInfo> added = ConvertGeofencesList(javaArgs[0]);
+					List<CircularRegionInfo> removed = ConvertGeofencesList(javaArgs[1]);
 					if (Localytics.OnLocalyticsDidUpdateMonitoredGeofences != null)
 					{
 						Localytics.OnLocalyticsDidUpdateMonitoredGeofences(added, removed);
+						return null;
 					}
 				}
 
-				// hack for object comparison
-				static bool isSelf;
-				int hashCode() {
-					isSelf = true;
-					return this.GetHashCode();
-				}
+				return base.Invoke(methodName, javaArgs);
+			}
 
-				bool equals(AndroidJavaObject o) {
-					isSelf = false;
-					o.Call<int>("hashCode");
-					return isSelf;
+			void localyticsDidUpdateLocation(AndroidJavaObject location)
+			{
+				if (Localytics.OnLocalyticsDidUpdateLocation != null)
+				{
+					Localytics.OnLocalyticsDidUpdateLocation(location);
 				}
 			}
+
+			void localyticsDidTriggerRegions(List<CircularRegionInfo> regions, RegionEvent regionEvent)
+			{
+				if (Localytics.OnLocalyticsDidTriggerRegions != null)
+				{
+					Localytics.OnLocalyticsDidTriggerRegions(regions, regionEvent);
+				}
+			}
+
+			void localyticsDidUpdateMonitoredGeofences(List<CircularRegionInfo> added, List<CircularRegionInfo> removed)
+			{
+				if (Localytics.OnLocalyticsDidUpdateMonitoredGeofences != null)
+				{
+					Localytics.OnLocalyticsDidUpdateMonitoredGeofences(added, removed);
+				}
+			}
+
+			// hack for object comparison
+			static bool isSelf;
+			int hashCode()
+			{
+				isSelf = true;
+				return this.GetHashCode();
+			}
+
+			bool equals(AndroidJavaObject o)
+			{
+				isSelf = false;
+				o.Call<int>("hashCode");
+				return isSelf;
+			}
+		}
 #endif
 
 #if UNITY_IOS
@@ -2104,7 +2109,8 @@ namespace LocalyticsUnity {
 		private static Dictionary<string, string> ConvertToDictionary(object obj)
 		{
 			Dictionary<string, string> convert = new Dictionary<string, string>();
-			if (obj != null) {
+			if (obj != null)
+			{
 				Dictionary<string, object> stringToObj = (Dictionary<string, object>) obj;
 				foreach (KeyValuePair<string, object> kvp in stringToObj)
 				{
