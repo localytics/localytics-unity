@@ -762,6 +762,7 @@ namespace LocalyticsUnity
 			}
 
 			LocalyticsClass.CallStatic("setAnalyticsListener", null);
+			_analyticsListener = null;
 			#elif UNITY_IOS
 			_removeAnalyticsCallback ();
 			#else
@@ -1137,6 +1138,7 @@ namespace LocalyticsUnity
 			}
 
 			LocalyticsClass.CallStatic("setMessagingListener", null);
+			_messagingListener = null;
 			#elif UNITY_IOS
 			_removeMessagingCallback ();
 			#else
@@ -1222,6 +1224,7 @@ namespace LocalyticsUnity
 			}
 
 			LocalyticsClass.CallStatic("setLocationListener", null);
+			_locationListener = null;
 			#elif UNITY_IOS
 			_removeLocationCallback ();
 			#else
