@@ -1300,7 +1300,7 @@ namespace LocalyticsUnity
 		public static void SetOption (string key, string stringValue)
 		{
 			#if UNITY_ANDROID
-			LocalyticsClass.CallStatic("setOption", key, new AndroidJavaObject("java/lang/String", stringValue));
+			LocalyticsClass.CallStatic("setOption", key, stringValue);
 			#elif UNITY_IOS
 			_setStringOption(key, stringValue);
 			#else
