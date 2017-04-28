@@ -44,6 +44,7 @@ You will need development environment setup for Unity, Android and/or iOS. After
 4. After you generate and open the XCode project, add the `libsqlite3.tbd` and `libz.tbd` libraries (located under "General" -> "Linked Frameworks and Libraries" in the .xcodeproj settings)
 
 ### Android
+#### Note: Due to a Unity [bug](https://forum.unity3d.com/threads/android-deployment-error.444133/#post-2876464), you may not be able to build and run with the latest version of Android sdk tools. This has been tested with sdk tools version 25.2.2.
 1. Inside Unity, `AndroidManifest.xml` is included within "Assets/Plugins/Android" as a sample; you may provide your own. You can also modify the file within the exported Android project, but the changes won't persist if the project is regenerated from Unity. The following changes are needed in the sample `AndroidManifest.xml`, or they need to be added to your existing `AndroidManifest.xml`:
   * Replace the android:value in the sample with your Localytics App Key
 
