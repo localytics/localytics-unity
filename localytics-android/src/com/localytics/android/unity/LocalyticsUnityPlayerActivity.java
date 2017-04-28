@@ -1,5 +1,6 @@
 package com.localytics.android.unity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -7,7 +8,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -17,7 +17,7 @@ import android.view.WindowManager;
 import com.localytics.android.Localytics;
 import com.unity3d.player.*;
 
-public class LocalyticsUnityPlayerActivity extends FragmentActivity
+public class LocalyticsUnityPlayerActivity extends Activity
 {
 	protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
 	

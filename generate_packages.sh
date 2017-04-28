@@ -16,6 +16,6 @@ cp $ANDROID_PROJECT_NAME/bin/classes.jar LocalyticsPlugin/Assets/Plugins/Android
 cp $ANDROID_PROJECT_NAME/libs/localytics.jar LocalyticsPlugin/Assets/Plugins/Android
 
 echo -n "Generating packages..."
-$UNITY_PATH -batchmode -executeMethod GenerateBundles.GenerateiOSBundle -projectPath $DIR/LocalyticsPlugin -quit
-$UNITY_PATH -batchmode -executeMethod GenerateBundles.GenerateAndroidBundle -projectPath $DIR/LocalyticsPlugin -quit
+$UNITY_PATH -batchmode -executeMethod GenerateBundles.GenerateiOSBundle -projectPath $DIR/LocalyticsPlugin -logFile -quit
+$UNITY_PATH -batchmode -executeMethod GenerateBundles.GenerateAndroidBundle -projectPath $DIR/LocalyticsPlugin -logFile -quit
 echo "Done!"
