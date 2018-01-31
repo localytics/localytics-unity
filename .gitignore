@@ -52,3 +52,9 @@ sysinfo.txt
 SampleUnityProject/builds
 *.sln
 *.csproj
+localtyics_android_builder/.gradle
+*.iml
+localtyics_android_builder/.idea/libraries
+localtyics_android_builder/.idea/gradle.xml
+localtyics_android_builder/.idea/workspace.xml
+local.properties
