@@ -58,3 +58,10 @@ localtyics_android_builder/.idea/libraries
 localtyics_android_builder/.idea/gradle.xml
 localtyics_android_builder/.idea/workspace.xml
 local.properties
+.gradle
+compiler.xml
+profiles_settings.xml
+encodings.xml
+localytics_android_builder/.idea/libraries
+misc.xml
+workspace.xml

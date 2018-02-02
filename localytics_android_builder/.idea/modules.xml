@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/localtyics_android_builder.iml" filepath="$PROJECT_DIR$/localtyics_android_builder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/localytics_android_builder.iml" filepath="$PROJECT_DIR$/localytics_android_builder.iml" />
     </modules>
   </component>
 </project>
