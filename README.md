@@ -1,13 +1,13 @@
 # Unity Plugins (iOS & Android)
 
 To use these Localytics Plugins for Unity:
-- Build and Import the Unity Packages from the LocalyticsPlugin Project into your Unity Project
+- Import (or optionally build and import) the Unity Packages from the LocalyticsPlugin Project into your Unity Project
 - Setup the SDK within Unity and the native development platforms (setting Localytics App Key and Push notification)
 - Start calling the Localytics API from any MonoBehavior
 
 ## Building and Importing the Unity Plugin Packages
 
-If you have Unity 2017.3 you should be able to use the unity packages that come checked in to this repository at inside the `release` folder.
+If you have Unity 2017.3 you should be able to use the unitypackage files that come checked in to this repository inside the `release` folder.
 
 If you want to customize the localytics plugin (for a newer or older version of unity, for instance) keep reading this section.
 
@@ -15,14 +15,14 @@ You will need development environment setup for Unity, Android and/or iOS. After
 
 1. Build the Plugins (or use the generated ones from the `release` folder)
 
-When creating the Android plug-in you may either supply your own unity.jar (`unity-classes.jar`) file or use the one already contained in the project (which came from Unity 2017.3).  Different versions of unity will require different versions of the `unity-classes.jar` to link against.  If these files are not present or the wrong version is used you may experience un-anticipated problems in the android build.  This jar file is needed for the plugin to be built correctly and it's interface must match that in your completed android project.
+When creating the Android plug-in you may either supply your own unity.jar (`unity-classes.jar`) file or use the one already contained in the project (which came from Unity 2017.3).  Different versions of unity will require different versions of the `unity-classes.jar` to link against (and may not provide a consistent interface with the provided code).  If these files are not present or the wrong version is used you may experience un-anticipated problems in the android build.  This jar file is needed for the plugin to be built correctly and it's interface must match that in your completed android project.
 
-The easiest way to get the `unity-classes.jar` file that I know of on MacOS is to create an empty unity project and export the project to android studio.  The `unity-classes.jar` file will be contained inside this project.  Find the file and copy it over the existing version at: 
+The easiest way to get the `unity-classes.jar` file that I know of on MacOS is to create an empty unity project and export the project to Android Studio.  The `unity-classes.jar` file will be contained inside this project.  Before attempting to generate the pacakages, find the file and copy it over the existing version at: 
 `localytics_android_builder/app/libs/unity-classes.jar`
 
   Call `generate_packages.sh` or `generate_packages.bat` contained in the root of this repository, depending on your system (OSX or Windows). Make sure the LocalyticsPlugin project is closed when executing these scripts. Otherwise, you may experience issues. The generated packages will be in the 'packages' folder with the respective version x.x.x. (i.e. localytics-unity-android-x.x.x.unitypackage and localytics-unity-ios-x.x.x.unitypackage)
 
-When these scripts are executed they first build the android studio project, copy the compiled results into a different folder, and then run a packaging unity app to create the '.unitypackage' files.
+When these scripts are executed they first build the android studio project, `localytics_android_builder` (which produces the compiled localytics code), copy the compiled results into a different folder, and then run a packaging unity script (unity project is located at 'LocalyticsPlugin') to create the '.unitypackage' files.
 
 2. Import the Unity Packages
 
