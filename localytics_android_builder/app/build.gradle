@@ -1,5 +1,17 @@
 apply plugin: 'com.android.library'
 
+
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+        return; // Skip debug builds.
+    }
+    def task = project.tasks.create "jar${name.capitalize()}", Jar
+    task.dependsOn variant.javaCompile
+    task.from variant.javaCompile.destinationDir
+    artifacts.add('archives', task);
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "25.0.3"
@@ -20,4 +32,12 @@ android {
 dependencies {
     compile files('libs/localytics.jar')
     implementation files('libs/unity-classes.jar')
+}
+
+repositories {
+    // Use 'jcenter' for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
+    google()
+    jcenter()
 }
