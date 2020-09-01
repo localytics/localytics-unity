@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -143,7 +143,7 @@ public class TestLocalytics : MonoBehaviour
 			regionInfo.UniqueId = "2nla29ahd"; // only the unique ID is required when manually triggering
 			List<CircularRegionInfo> toTrigger = new List<CircularRegionInfo> ();
 			toTrigger.Add (regionInfo);
-			Localytics.TriggerRegions (toTrigger, Localytics.RegionEvent.Enter);
+			Localytics.TriggerRegions (toTrigger, Localytics.RegionEvent.Enter, 0.0f, 0.0f);
 
 			// For iOS, complete PLIST, notification registration, and UserNotification (if relevant) steps before
 			// enabling location monitoring. For Android, complete AnddroidManifest.xml additions and add runtime permission
@@ -252,37 +252,37 @@ public class TestLocalytics : MonoBehaviour
 		Debug.Log ("WillDismissInAppMessage");
 	}
 
-	void Localytics_OnLocalyticsWillDisplayInAppMessage ()
+	void Localytics_OnLocalyticsWillDisplayInAppMessage (long campaignId)
 	{
 		Debug.Log ("WillDisplayInAppMessage");
 	}
 
-	bool Localytics_OnLocalyticsShouldShowPushNotification (PushCampaignInfo campaign)
+	bool Localytics_OnLocalyticsShouldShowPushNotification (long campaignId)
 	{
 		Debug.Log ("ShouldShowPushNotification");
-		printPushCampaign (campaign);
+		//printPushCampaign (campaign);
 		return true;
 	}
 
-	bool Localytics_OnLocalyticsShouldShowPlacesPushNotification (PlacesCampaignInfo campaign)
+	bool Localytics_OnLocalyticsShouldShowPlacesPushNotification (long campaignId)
 	{
 		Debug.Log ("ShouldShowPlacesPushNotification");
-		printPlacesCampaign (campaign);
+		//printPlacesCampaign (campaign);
 		return true;
 	}
 
-	AndroidJavaObject Localytics_OnLocalyticsWillShowPushNotification (AndroidJavaObject notificationBuilder, PushCampaignInfo campaign)
+	AndroidJavaObject Localytics_OnLocalyticsWillShowPushNotification (AndroidJavaObject notificationBuilder, long campaignId)
 	{
 		Debug.Log ("WillShowPushNotification");
-		printPushCampaign (campaign);
+		//printPushCampaign (campaign);
 		//notificationBuilder.Call<AndroidJavaObject> ("setContentTitle", "New Title");
 		return notificationBuilder;
 	}
 
-	AndroidJavaObject Localytics_OnLocalyticsWillShowPlacesPushNotification (AndroidJavaObject notificationBuilder, PlacesCampaignInfo campaign)
+	AndroidJavaObject Localytics_OnLocalyticsWillShowPlacesPushNotification (AndroidJavaObject notificationBuilder, long campaignId)
 	{
 		Debug.Log ("WillShowPlacesPushNotification");
-		printPlacesCampaign (campaign);
+		//printPlacesCampaign (campaign);
 		//notificationBuilder.Call<AndroidJavaObject> ("setContentTitle", "New Title");
 		return notificationBuilder;
 	}
