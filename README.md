@@ -1,108 +1,58 @@
-# Unity Plugins (iOS & Android)
+# Unity Sample Project with Plugins (iOS & Android)
 
 To use these Localytics Plugins for Unity:
-- Build and Import the Unity Packages from the LocalyticsPlugin Project into your Unity Project
+- Import the Unity Packages from the LocalyticsPlugin Project into your Unity Project
 - Setup the SDK within Unity and the native development platforms (setting Localytics App Key and Push notification)
+- Add the Localytics App Key to localytics.options.android.json and localytics.options.ios.json
+- If using firebase push notifications on android then fill in strings.xml with values from
 - Start calling the Localytics API from any MonoBehavior
 
-## Building and Importing the Unity Plugin Packages
+## Importing the Unity Plugin Packages
 
-You will need development environment setup for Unity, Android and/or iOS. After that,
+You will need to open either the Sample Project or your own project and then import the Unity Packages by:
 
-1. Build the Plugins (or use the generated ones from /release folder)
+  Going to "Asset" -> "Import Package" -> "Custom Package..." and Navigate to the **.unitypackage** for Android or AndroidX and/or iOS
+  
+If you do not have a specific reason to chose Android over AndroidX then chose the AndroidX package for use on Android devices.
 
-  Call `generate_packages.sh` or `generate_packages.bat` contained in the root of this repository, depending on your system (OSX or Windows). Make sure the LocalyticsPlugin project is closed when executing these scripts. Otherwise, you may experience issues. The generated packages will be in the 'packages' folder with the respective version x.x.x. (i.e. localytics-unity-android-x.x.x.unitypackage and localytics-unity-ios-x.x.x.unitypackage)
+## Using the Sample Project
 
-2. Import the Unity Packages
+The sample project contains scenes that will assist you in configuring the SDK for your project. It is highly recommended that you start by configuring the sample project and running throught the Tutorial scenes before integrating the package into your app.
 
-  Go to "Asset" -> "Import Package" -> "Custom Package..." and Navigate to the generated **.unitypackage** for Android and/or iOS in Step 1.
-
-
-## Setup the SDK
+## Setup the SDK 
 
 ### iOS
-1. Inside Unity, enable **AdSupport** framework for **libLocalytics.a**:
-  * Within Unity navigate to "Assets" -> "Plugins" -> "iOS".
-  * Select **libLocalytics.a**, and within the **Import Settings** section of the **Inspector** tab, enable **AdSupport**.
-  * Click **Apply**.
+1. Inside Unity, navigate to the Localytics/Resources folder and edit the file:
+  ```
+  localytics.options.ios.json
+  ```
+  Replace <LOCALYTICS_API_KEY> with your api key
 
-2. Initialization in UnityAppController
-
-  Inside Unity, `LocalyticsAppController.mm` is included within 'Assets/Plugins/iOS' as a template; if the application already has another UnityAppController, they need to be merged. You can also modify the file within the exported XCode project, but the changes won't persist if the project is regenerated from Unity.
-  * Call `autoIntegrate` with your Locatlyics App Key
-
-    ```
-    [Localytics autoIntegrate:@"xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" launchOptions:launchOptions];
-    ```
-  * (Optional) Push notification setup (see `LocalyticsAppController.mm` and the [push messaging documentation](http://docs.localytics.com/dev/ios.html#push-messaging-ios)).
-
-3. Inside Unity, configure test mode by adding the URL scheme:
-  * Open **Player Settings** by navigating to "Edit" -> "Project Settings" -> "Player".
-  * Select the **Settings for iOS** tab within the **Inspector** tab.
-  * Within the **Other Settings** section, set the **Supported URL Schemes** size value to `1`, and then set the element value to "amp" followed by your App Key (e.g. "ampYOUR_APP_KEY").
-
-4. After you generate and open the XCode project, add the `libsqlite3.tbd` and `libz.tbd` libraries (located under "General" -> "Linked Frameworks and Libraries" in the .xcodeproj settings)
+2. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to include Location Monitoring or no, the Info.plist file will automaticaly be configured when you build. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
 
 ### Android
-#### Note: Due to a Unity [bug](https://forum.unity3d.com/threads/android-deployment-error.444133/#post-2876464), you may not be able to build and run with the latest version of Android sdk tools. This has been tested with sdk tools version 25.2.2.
-1. Inside Unity, `AndroidManifest.xml` is included within "Assets/Plugins/Android" as a sample; you may provide your own. You can also modify the file within the exported Android project, but the changes won't persist if the project is regenerated from Unity. The following changes are needed in the sample `AndroidManifest.xml`, or they need to be added to your existing `AndroidManifest.xml`:
-  * Replace the android:value in the sample with your Localytics App Key
 
-    ```
-    <meta-data android:name="LOCALYTICS_APP_KEY" android:value="xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/>
+#### Note: On versions of Unity prior to Unity 2018.4, if you wish to use push notifications then you will need to export a gradle project, edit the build.gradle dependencies to include implementation ('androidx.legacy:legacy-support-v4:1.0.0') alongside the other aar files.
+#### Note: On earlier versions of Unity, due to a Unity [bug](https://forum.unity3d.com/threads/android-deployment-error.444133/#post-2876464), you may not be able to build and run with the latest version of Android sdk tools. This has been tested with sdk tools version 25.2.2.
+ation's package identifier in all locations where this placeholder exists:
+
+1. Inside Unity, navigate to the Localytics/Resources folder and edit the file:
   ```
-  * Replace YOUR_APP_KEY with your Localytics App Key in the test mode `IntentFilter` within the main `Activity` declaration. The value should be "amp" followed by your App Key (e.g. "ampYOUR_APP_KEY").
+  localytics.options.ios.json
   ```
-  <intent-filter>
-      <action android:name="android.intent.action.VIEW"/>
-      <category android:name="android.intent.category.DEFAULT"/>
-      <category android:name="android.intent.category.BROWSABLE"/>
-      <data
-        android:host="testMode"
-        android:scheme="ampYOUR_APP_KEY"/>
-  </intent-filter>
-  ```
-  * Replace YOUR.PACKAGE.NAME with your application's package identifier in all locations where this placeholder exists:
-
-    ```
-    // e.g.,
-    <permission android:name="YOUR.PACKAGE.NAME.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="YOUR.PACKAGE.NAME.permission.C2D_MESSAGE" />
-    ...
-    ```
-  * (Optional) Setup Push with your Project Number (not the Project ID string).
-
-    ```
-    // Important: You need to escape a space in front of the value.
-    // Otherwise it will be interpreted as an int,
-    // which is not a large enough data type to hold a project ID
-    <meta-data android:name="LOCALYTICS_PUSH_PROJECT_ID" android:value="\ #################"/>
-    ```
-
-2. Modifying Application launcher
-
-  If the existing Unity Android Project already has a main Application/Activity defined, you will need to merge this with our class.  For references on what is needed, refer the Application and Activity class inside "localytics-android/src" within this repository; you can also inspect the class inside Android Studio). Basically the following is needed.
-  * Inside `onCreate()` of com.localytics.android.unity.LocalyticsApplication.java or your main application, call this
-
-    ```
-    registerActivityLifecycleCallbacks(new LocalyticsActivityLifecycleCallbacks(this));
-    ```
-  * Inside `onCreate()` of com.localytics.android.unity.LocalyticsUnityPlayerActivity.java or your main activity, you may want to register Push. Most of the other code within this file are the same as the template Activity generated (i.e. UnityPlayerActivity).
-
-    ```
-    try
-    {
-        ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-
-        String pushId = appInfo.metaData.getString("LOCALYTICS_PUSH_PROJECT_ID");
-        Localytics.registerPush(pushId.trim());
-    }
-    catch (NameNotFoundException e)
-    {
-        ...
-    }
-    ```
-
+  Replace <LOCALYTICS_API_KEY> with your api key
+  
+ 2. If you are using firebase push notifications then you will need to acquire a google-services.json file from your firebase and use the values in it to populate the file:
+   ```
+   Assets/Plugins/Android/res/values/strings.xml
+   ```
+   A free online converter exists here:
+   ```
+   https://dandar3.github.io/android/google-services-json-to-xml.html
+   ```
+   
+3. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to build for Android or AndroidX which must match the package you imported. You may select to enable or disable push notifications in the manifest when you configure the options file. You must either click Configure Manifest to build an android manifest or if you have one already then you will need to manually integrate the changes into your existing manifest. You can tick Ignore Manifest Issues if you are using a custom configuration. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
+  
 ## Calling the SDK in C\# #
 
 After successfully setting up the SDK, the static function for the Localytics C\# class should be available within any MonoBehaviour of the project under the `LocalyticsUnity` namespace.
