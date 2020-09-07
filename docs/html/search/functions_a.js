@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['tagaddedtocart_111',['TagAddedToCart',['../class_localytics_unity_1_1_localytics.html#a0ebcb9c6cd0e4f0fd84e08a729f27520',1,'LocalyticsUnity::Localytics']]],
+  ['tagcompletedcheckout_112',['TagCompletedCheckout',['../class_localytics_unity_1_1_localytics.html#a36a387296676c555b258428b3a15d353',1,'LocalyticsUnity::Localytics']]],
+  ['tagcontentrated_113',['TagContentRated',['../class_localytics_unity_1_1_localytics.html#a1368dce647adb5302c8a6640ee48fc15',1,'LocalyticsUnity::Localytics']]],
+  ['tagcontentviewed_114',['TagContentViewed',['../class_localytics_unity_1_1_localytics.html#ac764dbf3472add4a4d1dc38a89c29d58',1,'LocalyticsUnity::Localytics']]],
+  ['tagcustomerloggedin_115',['TagCustomerLoggedIn',['../class_localytics_unity_1_1_localytics.html#a10b401952745e7b40811ca171dd598ad',1,'LocalyticsUnity::Localytics']]],
+  ['tagcustomerloggedout_116',['TagCustomerLoggedOut',['../class_localytics_unity_1_1_localytics.html#a269abbadeeff3c08f5aba76c2f7aecdf',1,'LocalyticsUnity::Localytics']]],
+  ['tagcustomerregistered_117',['TagCustomerRegistered',['../class_localytics_unity_1_1_localytics.html#a2f533f25fd75baa7adf4e0a08083c7cd',1,'LocalyticsUnity::Localytics']]],
+  ['tagevent_118',['TagEvent',['../class_localytics_unity_1_1_localytics.html#a1bf9274ac4ed2a22d46ce3dd62ffc9d2',1,'LocalyticsUnity::Localytics']]],
+  ['tagimpressionforinappcampaign_119',['TagImpressionForInAppCampaign',['../class_localytics_unity_1_1_localytics.html#ab073d0278d9e1d71ea4e4bd02f048ac6',1,'LocalyticsUnity.Localytics.TagImpressionForInAppCampaign(long inAppCampaignId, ImpressionType type)'],['../class_localytics_unity_1_1_localytics.html#a5673779cfdc6dfdf6271786485e4caa5',1,'LocalyticsUnity.Localytics.TagImpressionForInAppCampaign(long inAppCampaignId, string customAction)']]],
+  ['tagimpressionforinboxcampaign_120',['TagImpressionForInboxCampaign',['../class_localytics_unity_1_1_localytics.html#a3e99f31ea8d03e63689ced806d7013aa',1,'LocalyticsUnity.Localytics.TagImpressionForInboxCampaign(long campaignId, ImpressionType type)'],['../class_localytics_unity_1_1_localytics.html#ac275874be606ba65a2b576a59fb6a3ac',1,'LocalyticsUnity.Localytics.TagImpressionForInboxCampaign(long campaignId, string customAction)']]],
+  ['tagimpressionforpushtoinboxcampaign_121',['TagImpressionForPushToInboxCampaign',['../class_localytics_unity_1_1_localytics.html#a213a6f2d0c5deab03d4aedada05f2267',1,'LocalyticsUnity::Localytics']]],
+  ['taginvited_122',['TagInvited',['../class_localytics_unity_1_1_localytics.html#a7b4362988ac560507bcd3639a657da97',1,'LocalyticsUnity::Localytics']]],
+  ['tagplacespushopened_123',['tagPlacesPushOpened',['../class_localytics_unity_1_1_localytics.html#a5c10f3ab2a08a6c545382fefd2a996f3',1,'LocalyticsUnity::Localytics']]],
+  ['tagplacespushreceived_124',['tagPlacesPushReceived',['../class_localytics_unity_1_1_localytics.html#a9952da3533a963e1d02c6b8588d23283',1,'LocalyticsUnity::Localytics']]],
+  ['tagpurchased_125',['TagPurchased',['../class_localytics_unity_1_1_localytics.html#a2de2def6310ad6bc261c073a6fc8d0dd',1,'LocalyticsUnity::Localytics']]],
+  ['tagscreen_126',['TagScreen',['../class_localytics_unity_1_1_localytics.html#a6e9a176786c6170a43acc4e2e05d56b8',1,'LocalyticsUnity::Localytics']]],
+  ['tagsearched_127',['TagSearched',['../class_localytics_unity_1_1_localytics.html#a866f9c687353ecc4030f169213f586ae',1,'LocalyticsUnity::Localytics']]],
+  ['tagshared_128',['TagShared',['../class_localytics_unity_1_1_localytics.html#acfc6923f08a7f6192613a7cb90a52b1d',1,'LocalyticsUnity::Localytics']]],
+  ['tagstartedcheckout_129',['TagStartedCheckout',['../class_localytics_unity_1_1_localytics.html#a6e74dfa462c92182ef226cb4ccbff407',1,'LocalyticsUnity::Localytics']]],
+  ['triggerinappmessage_130',['TriggerInAppMessage',['../class_localytics_unity_1_1_localytics.html#a9e10c8961ae884bd2d3cadeb7fb2c977',1,'LocalyticsUnity::Localytics']]],
+  ['triggerinappmessagesforsessionstart_131',['TriggerInAppMessagesForSessionStart',['../class_localytics_unity_1_1_localytics.html#aba812a0e6fd05e43c7836532d8b5d1db',1,'LocalyticsUnity::Localytics']]],
+  ['triggerplacesnotificationforcampaign_132',['triggerPlacesNotificationForCampaign',['../class_localytics_unity_1_1_localytics.html#afe999742485df51cf1b63e7e380b7e4e',1,'LocalyticsUnity::Localytics']]],
+  ['triggerplacesnotificationforcampaignid_133',['triggerPlacesNotificationForCampaignId',['../class_localytics_unity_1_1_localytics.html#a4784ea7ce7da436e45e3833e32039e86',1,'LocalyticsUnity::Localytics']]],
+  ['triggerregion_134',['TriggerRegion',['../class_localytics_unity_1_1_localytics.html#af30dceb3bdb2ab65f864b15856499254',1,'LocalyticsUnity::Localytics']]],
+  ['triggerregions_135',['TriggerRegions',['../class_localytics_unity_1_1_localytics.html#a683b740ae4207038828f44d215a48d19',1,'LocalyticsUnity::Localytics']]]
+];
