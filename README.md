@@ -5,6 +5,7 @@ To use these Localytics Plugins for Unity:
 - Setup the SDK within Unity and the native development platforms (setting Localytics App Key and Push notification)
 - Add the Localytics App Key to localytics.options.android.json and localytics.options.ios.json
 - If using firebase push notifications on android then fill in strings.xml with values from
+- Open the tutorial scene Tutorial1_ConfiguringTheSDK.unity to check your configuration
 - Start calling the Localytics API from any MonoBehavior
 
 ## Importing the Unity Plugin Packages
@@ -22,27 +23,30 @@ The sample project contains scenes that will assist you in configuring the SDK f
 ## Setup the SDK 
 
 ### iOS
-1. Inside Unity, navigate to the Localytics/Resources folder and edit the file:
+1. Ensure in the Player Settings that Company Name, Product Name and iOS bundle identifier are appropriately set
+
+2. Inside Unity, navigate to the Localytics/Resources folder and edit the file:
   ```
   localytics.options.ios.json
   ```
   Replace <LOCALYTICS_API_KEY> with your api key
 
-2. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to include Location Monitoring or no, the Info.plist file will automaticaly be configured when you build. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
+3. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to include Location Monitoring or no, the Info.plist file will automaticaly be configured when you build. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
 
 ### Android
 
 #### Note: On versions of Unity prior to Unity 2018.4, if you wish to use push notifications then you will need to export a gradle project, edit the build.gradle dependencies to include implementation ('androidx.legacy:legacy-support-v4:1.0.0') alongside the other aar files.
 #### Note: On earlier versions of Unity, due to a Unity [bug](https://forum.unity3d.com/threads/android-deployment-error.444133/#post-2876464), you may not be able to build and run with the latest version of Android sdk tools. This has been tested with sdk tools version 25.2.2.
-ation's package identifier in all locations where this placeholder exists:
 
-1. Inside Unity, navigate to the Localytics/Resources folder and edit the file:
+1. Ensure in the Player Settings that Company Name, Product Name and Android Package Name are appropriately set
+
+2. Inside Unity, navigate to the Localytics/Resources folder and edit the file:
   ```
   localytics.options.ios.json
   ```
   Replace <LOCALYTICS_API_KEY> with your api key
   
- 2. If you are using firebase push notifications then you will need to acquire a google-services.json file from your firebase and use the values in it to populate the file:
+ 3. If you are using firebase push notifications then you will need to acquire a google-services.json file from your firebase console and use the values in it to populate the file:
    ```
    Assets/Plugins/Android/res/values/strings.xml
    ```
@@ -51,7 +55,7 @@ ation's package identifier in all locations where this placeholder exists:
    https://dandar3.github.io/android/google-services-json-to-xml.html
    ```
    
-3. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to build for Android or AndroidX which must match the package you imported. You may select to enable or disable push notifications in the manifest when you configure the options file. You must either click Configure Manifest to build an android manifest or if you have one already then you will need to manually integrate the changes into your existing manifest. You can tick Ignore Manifest Issues if you are using a custom configuration. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
+4. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to build for Android or AndroidX which must match the package you imported. You may select to enable or disable push notifications in the manifest when you configure the options file. You must either click Configure Manifest to build an android manifest or if you have one already then you will need to manually integrate the changes into your existing manifest. You can tick Ignore Manifest Issues if you are using a custom configuration. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
   
 ## Calling the SDK in C\# #
 
@@ -97,15 +101,21 @@ A small subset of the API requires preprocessor directives:
 // within a MonoBehaviour
 #if UNITY_IOS
 
+Localytics.HandleTestModeURL(string url);
 Localytics.InAppAdIdParameterEnabled;
 Localytics.PushToken;
+Localytics.PersistLocationMonitoring(bool persist)
+Localytics.setCustomerIdWithOptedOut(string value, bool optedOut);
 
 #elif UNITY_ANDROID
 
+Localytics.RegisterPush;
 Localytics.NotificationsDisabled;
 Localytics.PushRegistrationId;
+Localytics.SetLocationMonitoringEnabled(bool enabled, bool persist)
 Localytics.ClearInAppMessageDisplayActivity();
 Localytics.DisplayPushNotification(Dictionary<string, string> data);
+Localytics.setCustomerIdWithPrivacyOptedOut(string value, bool optedOut)
 
 #endif
 ```
@@ -135,13 +145,14 @@ public static event LocalyticsSessionWillOpen OnLocalyticsSessionWillOpen;
 // Messaging
 public static event LocalyticsDidDismissInAppMessage OnLocalyticsDidDismissInAppMessage;
 public static event LocalyticsDidDisplayInAppMessage OnLocalyticsDidDisplayInAppMessage;
+public static event LocalyticsShouldShowInAppMessage OnLocalyticsShouldShowInAppMessage;
 public static event LocalyticsWillDismissInAppMessage OnLocalyticsWillDismissInAppMessage;
 public static event LocalyticsWillDisplayInAppMessage OnLocalyticsWillDisplayInAppMessage;
+public static event LocalyticsShouldShowPlacesPushNotification OnLocalyticsShouldShowPlacesPushNotification;
 
 #if UNITY_ANDROID
-public static event LocalyticsShouldShowPushNotification OnLocalyticsShouldShowPushNotification;
-public static event LocalyticsShouldShowPlacesPushNotification OnLocalyticsShouldShowPlacesPushNotification;
 public static event LocalyticsWillShowPlacesPushNotification OnLocalyticsWillShowPlacesPushNotification;
+public static event LocalyticsShouldShowPushNotification OnLocalyticsShouldShowPushNotification;
 public static event LocalyticsWillShowPushNotification OnLocalyticsWillShowPushNotification;
 #endif
 
@@ -171,11 +182,12 @@ Localytics.OnLocalyticsDidDismissInAppMessage += Localytics_OnLocalyticsDidDismi
 Localytics.OnLocalyticsDidDisplayInAppMessage += Localytics_OnLocalyticsDidDisplayInAppMessage;
 Localytics.OnLocalyticsWillDismissInAppMessage += Localytics_OnLocalyticsWillDismissInAppMessage;
 Localytics.OnLocalyticsWillDisplayInAppMessage += Localytics_OnLocalyticsWillDisplayInAppMessage;
-#if UNITY_ANDROID
 Localytics.OnLocalyticsShouldShowPushNotification += Localytics_OnLocalyticsShouldShowPushNotification;
+
+#if UNITY_ANDROID
+Localytics.OnLocalyticsWillShowPlacesPushNotification += Localytics_OnLocalyticsWillShowPlacesPushNotification;
 Localytics.OnLocalyticsShouldShowPlacesPushNotification += Localytics_OnLocalyticsShouldShowPlacesPushNotification;
 Localytics.OnLocalyticsWillShowPushNotification += Localytics_OnLocalyticsWillShowPushNotification;
-Localytics.OnLocalyticsWillShowPlacesPushNotification += Localytics_OnLocalyticsWillShowPlacesPushNotification;
 #endif
 
 // Add Location Event Handlers
@@ -280,422 +292,3 @@ void Localytics_OnLocalyticsDidUpdateMonitoredGeofences(List<CircularRegionInfo>
 {
 	Debug.Log ("DidUpdateMonitoredGeofences");
 }
-```
-
-### Localytics C\# Class Members List
-
-```
-// Version 4.2.0
-public enum ProfileScope { Application, Organization }
-public enum InAppMessageDismissButtonLocation { Left, Right }
-public enum RegionEvent { Enter, Exit }
-
-// Analytics Events
-public static event LocalyticsDidTagEvent OnLocalyticsDidTagEvent;
-public static event LocalyticsSessionDidOpen OnLocalyticsSessionDidOpen;
-public static event LocalyticsSessionWillClose OnLocalyticsSessionWillClose;
-public static event LocalyticsSessionWillOpen OnLocalyticsSessionWillOpen;
-
-// Messaging Events
-public static event LocalyticsDidDismissInAppMessage OnLocalyticsDidDismissInAppMessage;
-public static event LocalyticsDidDisplayInAppMessage OnLocalyticsDidDisplayInAppMessage;
-public static event LocalyticsWillDismissInAppMessage OnLocalyticsWillDismissInAppMessage;
-public static event LocalyticsWillDisplayInAppMessage OnLocalyticsWillDisplayInAppMessage;
-#if UNITY_ANDROID
-public static event LocalyticsShouldShowPushNotification OnLocalyticsShouldShowPushNotification;
-public static event LocalyticsShouldShowPlacesPushNotification OnLocalyticsShouldShowPlacesPushNotification;
-public static event LocalyticsWillShowPlacesPushNotification OnLocalyticsWillShowPlacesPushNotification;
-public static event LocalyticsWillShowPushNotification OnLocalyticsWillShowPushNotification;
-#endif
-
-// Location Events
-public static event LocalyticsDidUpdateLocation OnLocalyticsDidUpdateLocation;
-public static event LocalyticsDidTriggerRegions OnLocalyticsDidTriggerRegions;
-public static event LocalyticsDidUpdateMonitoredGeofences OnLocalyticsDidUpdateMonitoredGeofences;
-
-// Integration
-public static void Upload()
-
-// Analytics
-public static void OpenSession()
-public static void CloseSession()
-public static void TagEvent(string eventName, Dictionary<string, string> attributes = null, long customerValueIncrease = 0)
-public static void TagPurchased(string itemName, string itemId, string itemType, long itemPrice, Dictionary<string, string> attributes)
-public static void TagAddedToCart(string itemName, string itemId, string itemType, long itemPrice, Dictionary<string, string> attributes)
-public static void TagStartedCheckout(long totalPrice, long itemCount, Dictionary<string, string> attributes)
-public static void TagCompletedCheckout(long totalPrice, long itemCount, Dictionary<string, string> attributes)
-public static void TagContentViewed(string contentName, string contentId, string contentType, Dictionary<string, string> attributes)
-public static void TagSearched(string queryText, string contentType, long resultCount, Dictionary<string, string> attributes)
-public static void TagShared(string contentName, string contentId, string contentType, string methodName, Dictionary<string, string> attributes)
-public static void TagContentRated(string contentName, string contentId, string contentType, long rating, Dictionary<string, string> attributes)
-public static void TagCustomerRegistered(CustomerInfo customer, string methodName, Dictionary<string, string> attributes)
-public static void TagCustomerLoggedIn(CustomerInfo customer, string methodName, Dictionary<string, string> attributes)
-public static void TagCustomerLoggedOut(Dictionary<string, string> attributes)
-public static void TagInvited(string methodName, Dictionary<string, string> attributes)
-public static void TagScreen(string screen)
-public static string GetCustomDimension(int dimension)
-public static void SetCustomDimension(int dimension, string value)
-public static bool OptedOut
-public static void RegisterForAnalyticsEvents()
-public static void UnregisterForAnalyticsEvents()
-
-// Profiles
-public static void SetProfileAttribute(string attributeName, long attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void SetProfileAttribute(string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void SetProfileAttribute(string attributeName, string attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void SetProfileAttribute(string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void DeleteProfileAttribute(string attributeName, ProfileScope scope = ProfileScope.Application)
-public static void AddProfileAttributesToSet(string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void AddProfileAttributesToSet(string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void RemoveProfileAttributesFromSet(string attributeName, long[] attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void RemoveProfileAttributesFromSet(string attributeName, string[] attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void IncrementProfileAttribute(string attributeName, long attributeValue, ProfileScope scope = ProfileScope.Application)
-public static void DecrementProfileAttribute(string attributeName, long decrementValue, ProfileScope scope = ProfileScope.Application)
-public static void SetCustomerEmail(string email)
-public static void SetCustomerFirstName(string firstName)
-public static void SetCustomerLastName(string lastName)
-public static void SetCustomerFullName(string fullName)
-
-// Marketing
-public static void TriggerInAppMessage(string triggerName, Dictionary<string, string> attributes = null)
-public static void DismissCurrentInAppMessage()
-public static InAppMessageDismissButtonLocation InAppMessageDismissButtonLocationEnum
-public static bool TestModeEnabled
-#if UNITY_ANDROID
-public static void ClearInAppMessageDisplayActivity() // Android only
-public static void RegisterPush(string senderId) // Android only
-public static void DisplayPushNotification(Dictionary<string, string> data) // Android only
-public static string PushRegistrationId // Android only
-public static bool NotificationsDisabled // Android only
-#elif UNITY_IOS
-public static string PushToken
-public static bool InAppAdIdParameterEnabled
-#endif
-public static void RegisterForMessagingEvents()
-public static void UnregisterForMessagingEvents()
-
-// Location
-public static bool LocationMonitoringEnabled
-public static List<CircularRegionInfo> GetGeofencesToMonitor(double latitude, double longitude)
-public static void TriggerRegions(List<CircularRegionInfo> regions, RegionEvent regionEvent)
-public static void RegisterForLocationEvents()
-public static void UnregisterForLocationEvents()
-
-// User Information
-public static string CustomerId
-public static string GetIdentifier(string key)
-public static void SetIdentifier(string key, string value)
-public static void SetLocation(LocationInfo location)
-
-// Developer Options
-public static void SetOption(string key, string stringValue)
-public static void SetOption(string key, long longValue)
-public static void SetOption(string key, bool boolValue)
-public static string AppKey
-public static string InstallId
-public static string LibraryVersion
-public static bool LoggingEnabled
-```
-
-### Other Public Classes
-```
-public class CustomerInfo
-{
-  public string CustomerId
-  {
-    get
-    {
-      return customerId;
-    }
-    set
-    {
-      customerId = value;
-    }
-  }
-
-  public string FirstName
-  {
-    get
-    {
-      return firstName;
-    }
-    set
-    {
-      firstName = value;
-    }
-  }
-
-  public string LastName
-  {
-    get
-    {
-      return lastName;
-    }
-    set
-    {
-      lastName = value;
-    }
-  }
-
-  public string FullName
-  {
-    get
-    {
-      return fullName;
-    }
-    set
-    {
-      fullName = value;
-    }
-  }
-
-  public string EmailAddress
-  {
-    get
-    {
-      return emailAddress;
-    }
-    set
-    {
-      emailAddress = value;
-    }
-  }
-
-  public Dictionary<string, string> ToDictionary()
-  {
-    Dictionary<string, string> dict = new Dictionary<string, string>();
-    if (customerId != null)
-    {
-      dict.Add("customer_id", customerId);
-    }
-    if (firstName != null)
-    {
-      dict.Add("first_name", firstName);
-    }
-    if (lastName != null)
-    {
-      dict.Add("last_name", lastName);
-    }
-    if (fullName != null)
-    {
-      dict.Add("full_name", fullName);
-    }
-    if (emailAddress != null)
-    {
-      dict.Add("email_address", emailAddress);
-    }
-    return dict;
-  }
-}
-
-public class RegionInfo
-{
-  public string UniqueId
-  {
-    get
-    {
-      return uniqueId;
-    }
-    set
-    {
-      uniqueId = value;
-    }
-  }
-
-  public double Latitude
-  {
-    get
-    {
-      return latitude;
-    }
-    set
-    {
-      latitude = value;
-    }
-  }
-
-  public double Longitude
-  {
-    get
-    {
-      return longitude;
-    }
-    set
-    {
-      longitude = value;
-    }
-  }
-
-  public string Name
-  {
-    get
-    {
-      return name;
-    }
-    set
-    {
-      name = value;
-    }
-  }
-
-  public string Type
-  {
-    get
-    {
-      return type;
-    }
-    set
-    {
-      type = value;
-    }
-  }
-
-  public Dictionary<string, string> Attributes
-  {
-    get
-    {
-      return attributes;
-    }
-    set
-    {
-      attributes = value;
-    }
-  }
-}
-
-public class CircularRegionInfo : RegionInfo
-{
-  public int Radius
-  {
-    get
-    {
-      return radius;
-    }
-    set
-    {
-      radius = value;
-    }
-  }
-}
-
-public class CampaignInfo
-{
-  public long CampaignId
-  {
-    get
-    {
-      return campaignId;
-    }
-    set
-    {
-      campaignId = value;
-    }
-  }
-
-  public string Name
-  {
-    get
-    {
-      return name;
-    }
-    set
-    {
-      name = value;
-    }
-  }
-
-  public Dictionary<string, string> Attributes
-  {
-    get
-    {
-      return attributes;
-    }
-    set
-    {
-      attributes = value;
-    }
-  }
-}
-
-public class NotificationCampaignInfo : CampaignInfo
-{
-  public long CreativeId
-  {
-    get
-    {
-      return creativeId;
-    }
-    set
-    {
-      creativeId = value;
-    }
-  }
-
-  public string CreativeType
-  {
-    get
-    {
-      return creativeType;
-    }
-    set
-    {
-      creativeType = value;
-    }
-  }
-
-  public string Message
-  {
-    get
-    {
-      return message;
-    }
-    set
-    {
-      message = value;
-    }
-  }
-
-  public string SoundFilename
-  {
-    get
-    {
-      return soundFilename;
-    }
-    set
-    {
-      soundFilename = value;
-    }
-  }
-}
-
-public class PushCampaignInfo : NotificationCampaignInfo
-{
-}
-
-public class PlacesCampaignInfo : NotificationCampaignInfo
-{
-  public CircularRegionInfo Region
-  {
-    get
-    {
-      return region;
-    }
-    set
-    {
-      region = value;
-    }
-  }
-
-  public Localytics.RegionEvent TriggerEvent
-  {
-    get
-    {
-      return triggerEvent;
-    }
-    set
-    {
-      triggerEvent = value;
-    }
-  }
-}
-```
