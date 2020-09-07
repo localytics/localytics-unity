@@ -5,6 +5,7 @@ To use these Localytics Plugins for Unity:
 - Setup the SDK within Unity and the native development platforms (setting Localytics App Key and Push notification)
 - Add the Localytics App Key to localytics.options.android.json and localytics.options.ios.json
 - If using firebase push notifications on android then fill in strings.xml with values from
+- Open the tutorial scene Tutorial1_ConfiguringTheSDK.unity to check your configuration
 - Start calling the Localytics API from any MonoBehavior
 
 ## Importing the Unity Plugin Packages
@@ -42,7 +43,7 @@ ation's package identifier in all locations where this placeholder exists:
   ```
   Replace <LOCALYTICS_API_KEY> with your api key
   
- 2. If you are using firebase push notifications then you will need to acquire a google-services.json file from your firebase and use the values in it to populate the file:
+ 2. If you are using firebase push notifications then you will need to acquire a google-services.json file from your firebase console and use the values in it to populate the file:
    ```
    Assets/Plugins/Android/res/values/strings.xml
    ```
