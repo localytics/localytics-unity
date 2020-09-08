@@ -1,6 +1,0 @@
-#!/bin/bash
- 
-plist=$1"/Info.plist"
- 
-/usr/libexec/PlistBuddy -c "Add :UIBackgroundModes array" $plist
-/usr/libexec/PlistBuddy -c "Add :UIBackgroundModes:0 string remote-notification" $plist
