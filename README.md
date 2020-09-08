@@ -122,6 +122,11 @@ Localytics.setCustomerIdWithPrivacyOptedOut(string value, bool optedOut)
 
 ## API References
 
+### API Documentation
+
+The Localytics.cs file contains doxygen style comments for all methods, for your convenience the generated doxygen documentation is available here:
+https://localytics.github.io/localytics-unity/html/class_localytics_unity_1_1_localytics.html
+
 ### Sample Application (SampleUnityProject)
 
 To run the project, you need to follow the steps above (Build/Import .unitypackage and setup the SDK).  Inside TestLocalytics.cs, there are examples of how to call most of the available API. Note that the sample application call through most of the available API on start up for testing and demo purpose; this is unlikely to be how it fits into a real application. As mention earlier, Localytics will automatically initiate when the application loads (i.e. auto integrate and setup any Messaging specified in previous steps) and you can call the other methods at any time.
