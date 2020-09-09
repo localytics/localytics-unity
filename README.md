@@ -51,9 +51,9 @@ The sample project contains scenes that will assist you in configuring the SDK f
    Assets/Plugins/Android/res/values/strings.xml
    ```
    A free online converter exists here:
-   ```
+  
    https://dandar3.github.io/android/google-services-json-to-xml.html
-   ```
+   
    
 4. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to build for Android or AndroidX which must match the package you imported. You may select to enable or disable push notifications in the manifest when you configure the options file. You must either click Configure Manifest to build an android manifest or if you have one already then you will need to manually integrate the changes into your existing manifest. You can tick Ignore Manifest Issues if you are using a custom configuration. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
   
@@ -125,6 +125,7 @@ Localytics.setCustomerIdWithPrivacyOptedOut(string value, bool optedOut)
 ### API Documentation
 
 The Localytics.cs file contains doxygen style comments for all methods, for your convenience the generated doxygen documentation is available here:
+
 https://localytics.github.io/localytics-unity/html/class_localytics_unity_1_1_localytics.html
 
 ### Sample Application (SampleUnityProject)
