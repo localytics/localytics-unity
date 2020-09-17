@@ -56,6 +56,14 @@ The sample project contains scenes that will assist you in configuring the SDK f
    
    
 4. On the top menu bar go to the Localytics menu entry and select Build Config, here you can select whether to build for Android or AndroidX which must match the package you imported. You may select to enable or disable push notifications in the manifest when you configure the options file. You must either click Configure Manifest to build an android manifest or if you have one already then you will need to manually integrate the changes into your existing manifest. You can tick Ignore Manifest Issues if you are using a custom configuration. There is a build button at the bottom of the Build Config which is a convenience button and is no different to building from PlayerSettings as usual.
+
+Also for Android you will need to set the global gradle variables:
+
+`android.enableJetifier=true`
+
+`android.useAndroidX=true`
+
+This can be done in Android Studio.
   
 ## Calling the SDK in C\# #
 
