@@ -10,7 +10,9 @@ To use these Localytics Plugins for Unity:
 
 # Migrating from Older Versions
 
-Please delete the files from the old version of the plugin and then once the new plugin is imported then access the new build config tool from the Localytics top bar menu. Older versions did not require a config file; whereas these newer versions have ios and android specific config files, as well as there being build specific options in the config tool.
+Please delete the files from the old version of the plugin and then once the new plugin is imported then access the new build config tool from the Localytics top bar menu. Older versions did not require a config file; whereas these newer versions have ios and android specific config files, as well as there being build specific options in the config tool. An image of the build config tool is given here:
+
+https://github.com/AdbC99/localytics-unity/blob/master/docs/build-config-tool.png
 
 ## Importing the Unity Plugin Packages
 
