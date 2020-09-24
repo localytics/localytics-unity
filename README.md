@@ -8,6 +8,10 @@ To use these Localytics Plugins for Unity:
 - Open the tutorial scene Tutorial1_ConfiguringTheSDK.unity to check your configuration
 - Start calling the Localytics API from any MonoBehavior
 
+# Migrating from Older Versions
+
+Please delete the files from the old version of the plugin and then once the new plugin is imported then access the new build config tool from the Localytics top bar menu. Older versions did not require a config file; whereas these newer versions have ios and android specific config files, as well as there being build specific options in the config tool.
+
 ## Importing the Unity Plugin Packages
 
 You will need to open either the Sample Project or your own project and then import the Unity Packages by:
