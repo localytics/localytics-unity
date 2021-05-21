@@ -2,7 +2,7 @@
 
 # Simplified Mode 
 
-The latest versions of the SDK include an option (enabled by default) in the Build Config tool int the Unity Localytics menu which drastically simplifies the build process at the cost of losing access to functionality like messaging and push notifications. In simplified mode a user can simply import the package into a project, add the Localytics App Key to localytics.options.android.json and localytics.options.ios.json and they are ready to start triggering analytics events.
+The latest versions of the SDK (6.2.x) include an option (enabled by default) in the Build Config tool int the Unity Localytics menu which drastically simplifies the build process at the cost of losing access to functionality like messaging and push notifications. In simplified mode a user can simply import the package into a project, add the Localytics App Key to localytics.options.android.json and localytics.options.ios.json and they are ready to start triggering analytics events.
 
 # Instructions
 
