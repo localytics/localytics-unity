@@ -1,10 +1,16 @@
 # Unity Sample Project with Plugins (iOS & Android)
 
+# Simplified Mode 
+
+The latest versions of the SDK include an option (enabled by default) in the Build Config tool int the Unity Localytics menu which drastically simplifies the build process at the cost of losing access to functionality like messaging and push notifications. In simplified mode a user can simply import the package into a project, add the Localytics App Key to localytics.options.android.json and localytics.options.ios.json and they are ready to start triggering analytics events.
+
+# Instructions
+
 To use these Localytics Plugins for Unity:
 - Import the Unity Packages from the LocalyticsPlugin Project into your Unity Project
 - Setup the SDK within Unity and the native development platforms (setting Localytics App Key and Push notification)
 - Add the Localytics App Key to localytics.options.android.json and localytics.options.ios.json
-- If using firebase push notifications on android then fill in strings.xml with values from
+- If using firebase push notifications on android then fill in strings.xml with values from the firebase control panel
 - Open the tutorial scene Tutorial1_ConfiguringTheSDK.unity to check your configuration
 - Start calling the Localytics API from any MonoBehavior
 
